@@ -102,14 +102,14 @@ def plot_all(p):
     return p.add_argument("--plot_all", "--all", dest=PLOT_ALL, default=False, action="store_true",
                           help="Plot all items [false]")
 
-def plot_contour(p):
-    return p.add_argument("--plot_contour", "--contour", dest=PLOT_CONTOUR, default=False, action="store_true",
-                          help="Plot contour [false]")
-
-
 def plot_points(p):
     return p.add_argument("--plot_points", "--points", dest=PLOT_POINTS, default=False, action="store_true",
                           help="Plot point cloud [false]")
+
+
+def plot_contour(p):
+    return p.add_argument("--plot_contour", "--contour", dest=PLOT_CONTOUR, default=False, action="store_true",
+                          help="Plot contour [false]")
 
 
 def plot_slices(p):
@@ -127,6 +127,6 @@ def max_angular(p):
                           help="Maximum angular speed [{0}]".format(MAX_ANGULAR_DEFAULT))
 
 
-def full_stop_angle(p):
+def stop_angle(p):
     return p.add_argument("--stop_angle", dest=STOP_ANGLE, default=STOP_ANGLE_DEFAULT, type=int,
                           help="Full stop angle [{0}]".format(STOP_ANGLE_DEFAULT))

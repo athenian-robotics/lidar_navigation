@@ -87,7 +87,7 @@ if __name__ == '__main__':
     # Parse CLI args
     args = setup_cli_args(cli.max_linear,
                           cli.max_angular,
-                          cli.full_stop_angle,
+                          cli.stop_angle,
                           cli.publish_rate,
                           cli.centroid_topic,
                           cli.log_level)

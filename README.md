@@ -21,7 +21,7 @@ Start a physical Turtlebot3 with:
 $ roslaunch turtlebot3_bringup turtlebot3_robot.launch 
 ```
 
-Start a simulated TurtleBot3 with:
+Start a simulated TurtleBot3 in Gazebo with:
 ```bash
 # On Ubuntu PC
 $ roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch 
@@ -64,6 +64,30 @@ Warning: Do not run keyboard teleop node at the same time as teleop_node.py
 | --centroid_topic | Centroid Point value topic name                    | /centroid      |
 | --publish_pc     | Publish point cloud values                         | false          |
 | --pc_topic       | PointCloud2 values topic name                      | /pc2           |
+| --verbose        | Enable debugging info                              | false          |
+
+### teleop_node.py 
+
+| Option           | Description                                        | Default        |
+|:-----------------|----------------------------------------------------|----------------|
+| --max_linear     | Maximum linear speed                               | .35            |
+| --max_angular    | Maximum angular speed                              | 2.75           |
+| --stop_angle     | Full stop angle                                    | 70             |
+| --publish_rate   | Publish rate                                       | 30             |
+| --centroid_topic | Centroid Point value topic name                    | /centroid      |
+| --verbose        | Enable debugging info                              | false          |
+
+### image_node.py 
+
+| Option           | Description                                        | Default        |
+|:-----------------|----------------------------------------------------|----------------|
+| --plot_all       | Plot all items                                     | false          |
+| --plot_points    | Plot points                                        | false          |
+| --plot_contour   | Plot contour                                       | false          |
+| --plot_slices    | Plot slices                                        | false          |
+| --plot_mult      | Maximum plot multiplier                            | 1.05           |
+| --contour_topic  | InnerContour value topic name                      | /contour       |
+| --verbose        | Enable debugging info                              | false          |
 
 ## RViz
 

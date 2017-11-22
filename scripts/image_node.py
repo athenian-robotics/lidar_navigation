@@ -126,12 +126,12 @@ class LidarImage(object):
 
 if __name__ == '__main__':
     # Parse CLI args
-    args = setup_cli_args(cli.contour_topic,
-                          cli.plot_all,
+    args = setup_cli_args(cli.plot_all,
                           cli.plot_points,
                           cli.plot_contour,
                           cli.plot_slices,
                           cli.plot_mult,
+                          cli.contour_topic,
                           cli.log_level)
 
     # Setup logging
