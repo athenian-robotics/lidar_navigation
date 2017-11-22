@@ -4,10 +4,12 @@ import logging
 from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
 from constants import HTTP_DELAY_SECS, HTTP_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
 from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
+from constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
 from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, PLOT_MULT, PLOT_MULT_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, PUBLISH_PC, MAX_MULT, MAX_MULT_DEFAULT
+from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT
 
 
 def setup_cli_args(*args):
@@ -32,7 +34,7 @@ def http_delay_secs(p):
 
 
 def http_file(p):
-    return p.add_argument("-i", "--file", "--http_file", dest=HTTP_FILE, default=HTTP_TEMPLATE_DEFAULT,
+    return p.add_argument("--file", "--http_file", dest=HTTP_FILE, default=HTTP_TEMPLATE_DEFAULT,
                           help="HTTP template file [{}]".format(HTTP_TEMPLATE_DEFAULT))
 
 
@@ -81,6 +83,11 @@ def centroid_topic(p):
                           help="Centroid topic name [{}]".format(CENTROID_TOPIC_DEFAULT))
 
 
+def vel_topic(p):
+    return p.add_argument("--vel_topic", dest=VEL_TOPIC, default=VEL_TOPIC_DEFAULT,
+                          help="Velocity topic name [{}]".format(VEL_TOPIC_DEFAULT))
+
+
 def pc_topic(p):
     return p.add_argument("--pc_topic", dest=PC_TOPIC, default=PC_TOPIC_DEFAULT,
                           help="Point cloud topic anme [{}]".format(PC_TOPIC_DEFAULT))
@@ -108,3 +115,18 @@ def plot_points(p):
 def plot_slices(p):
     return p.add_argument("--plot_slices", "--slices", dest=PLOT_SLICES, default=False, action="store_true",
                           help="Plot slices [false]")
+
+
+def max_linear(p):
+    return p.add_argument("--max_linear", "--linear", dest=MAX_LINEAR, default=MAX_LINEAR_DEFAULT, type=float,
+                          help="Maximum linear speed [{0}]".format(MAX_LINEAR_DEFAULT))
+
+
+def max_angular(p):
+    return p.add_argument("--max_angular", "--angular", dest=MAX_ANGULAR, default=MAX_ANGULAR_DEFAULT, type=float,
+                          help="Maximum angular speed [{0}]".format(MAX_ANGULAR_DEFAULT))
+
+
+def full_stop_angle(p):
+    return p.add_argument("--stop_angle", dest=STOP_ANGLE, default=STOP_ANGLE_DEFAULT, type=int,
+                          help="Full stop angle [{0}]".format(STOP_ANGLE_DEFAULT))

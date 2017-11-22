@@ -46,9 +46,8 @@ class LidarGeometry(object):
         self.__max_dist = None
         self.__data_available = False
 
-        if self.__publish_point_cloud:
-            rospy.loginfo("Publishing PointCloud2 vals to topic: {}".format(pc_topic))
-            self.__pc_pub = rospy.Publisher(pc_topic, PointCloud2, queue_size=5)
+        # Create Slices once and reset them on each iteration
+        self.__slices = [Slice(v, v + self.__slice_size) for v in range(0, 180, self.__slice_size)]
 
         rospy.loginfo("Publishing InnerContour vals to topic: {}".format(contour_topic))
         self.__contour_pub = rospy.Publisher(contour_topic, InnerContour, queue_size=5)
@@ -56,11 +55,12 @@ class LidarGeometry(object):
         rospy.loginfo("Publishing Point vals to topic: {}".format(centroid_topic))
         self.__centroid_pub = rospy.Publisher(centroid_topic, Point, queue_size=5)
 
+        if self.__publish_point_cloud:
+            rospy.loginfo("Publishing PointCloud2 vals to topic: {}".format(pc_topic))
+            self.__pc_pub = rospy.Publisher(pc_topic, PointCloud2, queue_size=5)
+
         rospy.loginfo("Subscribing to LaserScan topic: {}".format(scan_topic))
         self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_scan)
-
-        # Create Slices once and reset them on each iteration
-        self.__slices = [Slice(v, v + self.__slice_size) for v in range(0, 180, self.__slice_size)]
 
     def on_scan(self, scan):
         # https://answers.ros.org/question/202787/using-pointcloud2-data-getting-xy-points-in-python/
@@ -156,15 +156,15 @@ if __name__ == '__main__':
     rospy.loginfo("Running")
 
     try:
-        lidar_geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
-                                       max_mult=args[MAX_MULT],
-                                       publish_rate=args[PUBLISH_RATE],
-                                       publish_pc=args[PUBLISH_PC],
-                                       scan_topic=args[SCAN_TOPIC],
-                                       contour_topic=args[CONTOUR_TOPIC],
-                                       centroid_topic=args[CENTROID_TOPIC],
-                                       pc_topic=args[PC_TOPIC])
-        lidar_geometry.eval_points()
+        geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
+                                 max_mult=args[MAX_MULT],
+                                 publish_rate=args[PUBLISH_RATE],
+                                 publish_pc=args[PUBLISH_PC],
+                                 scan_topic=args[SCAN_TOPIC],
+                                 contour_topic=args[CONTOUR_TOPIC],
+                                 centroid_topic=args[CENTROID_TOPIC],
+                                 pc_topic=args[PC_TOPIC])
+        geometry.eval_points()
     except KeyboardInterrupt:
         pass
 

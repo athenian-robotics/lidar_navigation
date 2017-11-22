@@ -33,8 +33,20 @@ PC_TOPIC_DEFAULT = "/pc2"
 PLOT_MULT = "plot_mult"
 PLOT_MULT_DEFAULT = 1.05
 
+PLOT_ALL = "plot_all"
 PLOT_CONTOUR = "plot_contour"
 PLOT_POINTS = "plot_points"
 PLOT_SLICES = "plot_slices"
 
 PUBLISH_PC = "publish_pc"
+
+MAX_LINEAR = "max_linear"
+MAX_LINEAR_DEFAULT = .35
+MAX_ANGULAR = "max_angular"
+MAX_ANGULAR_DEFAULT = 2.75
+
+VEL_TOPIC = "vel_topic"
+VEL_TOPIC_DEFAULT = "/cmd_vel"
+
+STOP_ANGLE = "stop_angle"
+STOP_ANGLE_DEFAULT = 70
