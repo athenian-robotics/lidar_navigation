@@ -4,8 +4,8 @@ import logging
 from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
 from constants import HTTP_DELAY_SECS, HTTP_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
 from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
-from constants import PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
-from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT
+from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
+from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, PLOT_MULT, PLOT_MULT_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, PUBLISH_PC, MAX_MULT, MAX_MULT_DEFAULT
 
@@ -56,6 +56,11 @@ def max_mult(p):
                           help="Maximum distance multiplier [{0}]".format(MAX_MULT_DEFAULT))
 
 
+def plot_mult(p):
+    return p.add_argument("--plot_mult", dest=PLOT_MULT, default=PLOT_MULT_DEFAULT, type=float,
+                          help="Maximum plot multiplier [{0}]".format(PLOT_MULT_DEFAULT))
+
+
 def publish_rate(p):
     return p.add_argument("--publish_rate", dest=PUBLISH_RATE, default=PUBLISH_RATE_DEFAULT, type=int,
                           help="Publish rate [{0}]".format(PUBLISH_RATE_DEFAULT))
@@ -85,6 +90,10 @@ def publish_pc(p):
     return p.add_argument("--publish_pc", dest=PUBLISH_PC, default=False, action="store_true",
                           help="Publish point cloud data [false]")
 
+
+def plot_all(p):
+    return p.add_argument("--plot_all", "--all", dest=PLOT_ALL, default=False, action="store_true",
+                          help="Plot all items [false]")
 
 def plot_contour(p):
     return p.add_argument("--plot_contour", "--contour", dest=PLOT_CONTOUR, default=False, action="store_true",

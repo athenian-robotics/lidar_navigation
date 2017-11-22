@@ -47,16 +47,16 @@ class LidarGeometry(object):
         self.__data_available = False
 
         if self.__publish_point_cloud:
-            rospy.loginfo("Publishing point cloud to: {}".format(pc_topic))
+            rospy.loginfo("Publishing PointCloud2 vals to topic: {}".format(pc_topic))
             self.__pc_pub = rospy.Publisher(pc_topic, PointCloud2, queue_size=5)
 
-        rospy.loginfo("Publishing contour to: {}".format(contour_topic))
+        rospy.loginfo("Publishing InnerContour vals to topic: {}".format(contour_topic))
         self.__contour_pub = rospy.Publisher(contour_topic, InnerContour, queue_size=5)
 
-        rospy.loginfo("Publishing centroid to: {}".format(centroid_topic))
+        rospy.loginfo("Publishing Point vals to topic: {}".format(centroid_topic))
         self.__centroid_pub = rospy.Publisher(centroid_topic, Point, queue_size=5)
 
-        rospy.loginfo("Subscribing to scan topic: {}".format(scan_topic))
+        rospy.loginfo("Subscribing to LaserScan topic: {}".format(scan_topic))
         self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_scan)
 
         # Create Slices once and reset them on each iteration
@@ -70,8 +70,8 @@ class LidarGeometry(object):
             self.__pc_pub.publish(point_cloud)
 
         point_list = []
+        # Shift all points counter clockwise 90 degrees - switch x,y and multiply x by -1
         for p in pc2.read_points(point_cloud, field_names=("x", "y", "z"), skip_nans=True):
-            # Shift all points counter clockwise 90 degrees - switch x,y and multiply x by -1
             x = -1 * p[1]
             y = p[0]
             # Track only points in front of robot -- NW and NE quadrants
