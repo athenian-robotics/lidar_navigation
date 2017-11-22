@@ -42,7 +42,6 @@ class LidarGeometry(object):
         self.__laser_projector = LaserProjection()
         self.__vals_lock = Lock()
         self.__all_points = []
-        self.__initial_points = []
         self.__nearest_points = []
         self.__max_dist = None
         self.__data_available = False
@@ -98,7 +97,6 @@ class LidarGeometry(object):
         with self.__vals_lock:
             self.__max_dist = max_dist
             self.__all_points = point_list
-            self.__initial_points = [s.initial for s in self.__slices]
             self.__nearest_points = [s.nearest for s in self.__slices]
             self.__data_available = True
 
@@ -111,7 +109,6 @@ class LidarGeometry(object):
             with self.__vals_lock:
                 max_dist = self.__max_dist
                 all_points = self.__all_points
-                initial_points = self.__initial_points
                 nearest_points = self.__nearest_points
                 self.__all_points = []
                 self.__data_available = False
@@ -129,7 +126,6 @@ class LidarGeometry(object):
             ic.max_dist = max_dist
             ic.slice_size = self.__slice_size
             ic.all_points = np.asarray([p.to_ros_point() for p in all_points])
-            ic.initial_points = np.asarray([p.to_ros_point() for p in initial_points])
             ic.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
             ic.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
 

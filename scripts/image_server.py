@@ -23,11 +23,11 @@ class ImageServer(object):
     args = [cli.http_file, cli.http_host, cli.http_delay_secs, cli.http_verbose]
 
     def __init__(self,
-                 http_file,
+                 template_file,
                  http_host=HTTP_HOST_DEFAULT,
                  http_delay_secs=HTTP_DELAY_SECS_DEFAULT,
                  http_verbose=False):
-        self.__http_file = http_file
+        self.__template_file = template_file
         self.__http_host = http_host
         self.__http_delay_secs = http_delay_secs
 
@@ -121,7 +121,7 @@ class ImageServer(object):
         def get_page(delay):
             delay_secs = float(delay) if delay else self.__http_delay_secs
             try:
-                with open(self.__http_file) as f:
+                with open(self.__template_file) as f:
                     html = f.read()
 
                 return html.replace("_TITLE_", "") \
@@ -131,7 +131,7 @@ class ImageServer(object):
                     .replace("_HEIGHT_", str(height)) \
                     .replace("_IMAGE_FNAME_", _image_fname)
             except BaseException as e:
-                rospy.logerror("Unable to create template file with %s [%s]", self.__http_file, e, exc_info=True)
+                rospy.logerror("Unable to create template file with %s [%s]", self.__template_file, e, exc_info=True)
                 time.sleep(1)
 
         def run_http(flask_server, host, port):
@@ -152,7 +152,7 @@ class ImageServer(object):
     def _start(self):
         # Cannot start the flask server until the dimensions of the image are known
         # So do not fire up the thread until the first image is available
-        rospy.loginfo("Using template file %s", self.__http_file)
+        rospy.loginfo("Using template file %s", self.__template_file)
         rospy.loginfo("Starting HTTP server on http://%s:%s/", self.__host, self.__port)
         self.__ready_to_serve = True
         self.__started = True

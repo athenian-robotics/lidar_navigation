@@ -26,17 +26,14 @@ from slice import Slice
 
 class LidarContour(object):
     def __init__(self,
-                 max_inc=.25,
-                 plt_inc=.1,
+                 plot_inc=.1,
                  image_server=None,
                  contour_topic="/contour"):
-        self.__max_inc = max_inc
-        self.__plt_inc = plt_inc
+        self.__plot_inc = plot_inc
         self.__image_server = image_server
 
         self.__curr_vals_lock = Lock()
         self.__all_points = []
-        self.__initial_points = []
         self.__nearest_points = []
         self.__max_dist = None
         self.__slice_size = None
@@ -53,7 +50,6 @@ class LidarContour(object):
             self.__slice_size = contour.slice_size
             self.__centroid = Point2D(contour.centroid.x, contour.centroid.y)
             self.__all_points = [Point2D(p.x, p.y) for p in contour.all_points]
-            self.__initial_points = [Point2D(p.x, p.y) for p in contour.initial_points]
             self.__nearest_points = [Point2D(p.x, p.y) for p in contour.nearest_points]
             self.__data_available = True
 
@@ -68,7 +64,6 @@ class LidarContour(object):
                 slice_size = self.__slice_size
                 centroid = self.__centroid
                 all_points = self.__all_points
-                initial_points = self.__initial_points
                 nearest_points = self.__nearest_points
                 self.__data_available = False
 
@@ -102,7 +97,8 @@ class LidarContour(object):
             plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
 
             # Plot axis
-            plt.axis([(-1 * max_dist) - self.__plt_inc, max_dist + self.__plt_inc, - 0.05, max_dist + self.__plt_inc])
+            plt.axis(
+                [(-1 * max_dist) - self.__plot_inc, max_dist + self.__plot_inc, - 0.05, max_dist + self.__plot_inc])
 
             if self.__image_server is not None:
                 sio = cStringIO.StringIO()
@@ -118,14 +114,14 @@ class LidarContour(object):
 
 if __name__ == '__main__':
     # Parse CLI args
-    args = setup_cli_args(ImageServer.args, cli.log_level)
+    args = setup_cli_args(cli.contour_topic, cli.log_level)
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
     rospy.init_node('contour_node')
 
-    image_server = ImageServer(http_file=args[HTTP_FILE],
+    image_server = ImageServer(template_file=args[HTTP_FILE],
                                http_host=args[HTTP_HOST],
                                http_delay_secs=args[HTTP_DELAY_SECS],
                                http_verbose=args[HTTP_VERBOSE])

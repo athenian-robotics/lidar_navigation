@@ -22,12 +22,7 @@ class Slice(object):
 
         # Calculate the angle halfway between the begin and end
         self.__mid_rad = math.radians(self.__begin + ((self.__end - self.__begin) / 2.0))
-        self.__initial_point = None
         self.__nearest_point = None
-
-    @property
-    def initial(self):
-        return self.__initial_point
 
     @property
     def nearest(self):
@@ -48,8 +43,7 @@ class Slice(object):
             self.__nearest_point = point
 
     def reset(self, max_dist):
-        self.__initial_point = to_point(self.__mid_rad, max_dist)
-        self.__nearest_point = self.__initial_point
+        self.__nearest_point = to_point(self.__mid_rad, max_dist)
 
     def __str__(self):
         return "Begin: {} End: {} Nearest: {}".format(self.__begin, self.__end, self.__nearest_point)
