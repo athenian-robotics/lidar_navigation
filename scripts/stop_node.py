@@ -23,6 +23,8 @@ if __name__ == '__main__':
     vel_topic = "/cmd_vel"
     rospy.loginfo("Publishing Twist vals to topic: {}".format(vel_topic))
     vel_pub = rospy.Publisher(vel_topic, Twist, queue_size=5)
+    rospy.sleep(1)
+
     for i in range(10):
         vel_pub.publish(new_twist(0, 0))
     rospy.sleep(1)

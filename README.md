@@ -47,6 +47,23 @@ To stop a crashed robot, open keyboard teleop control node with:
 # On Ubuntu PC
 $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
+Warning: Do not run keyboard teleop node at the same time as teleop_node.py 
+
+
+##  Node CLI Options
+
+### geometry_node.py 
+
+| Option           | Description                                        | Default        |
+|:-----------------|----------------------------------------------------|----------------|
+| --slice_size     | Slice size degrees                                 | 5              |
+| --max_mult       | Maximum distance multiplier                        | 1.1            |
+| --publish_rate   | Publish rate                                       | 30             |
+| --scan_topic     | LaserScan values topic name                        | /scan          |
+| --contour_topic  | InnerContour value topic name                      | /contour       |
+| --centroid_topic | Centroid Point value topic name                    | /centroid      |
+| --publish_pc     | Publish point cloud values                         | false          |
+| --pc_topic       | PointCloud2 values topic name                      | /pc2           |
 
 ## RViz
 

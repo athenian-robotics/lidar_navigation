@@ -70,27 +70,27 @@ def publish_rate(p):
 
 def scan_topic(p):
     return p.add_argument("--scan_topic", dest=SCAN_TOPIC, default=SCAN_TOPIC_DEFAULT,
-                          help="Scan topic name [{}]".format(SCAN_TOPIC_DEFAULT))
+                          help="LaserScan values topic name [{}]".format(SCAN_TOPIC_DEFAULT))
 
 
 def contour_topic(p):
     return p.add_argument("--contour_topic", dest=CONTOUR_TOPIC, default=CONTOUR_TOPIC_DEFAULT,
-                          help="Contour topic name [{}]".format(CONTOUR_TOPIC_DEFAULT))
+                          help="InnerContour values topic name [{}]".format(CONTOUR_TOPIC_DEFAULT))
 
 
 def centroid_topic(p):
     return p.add_argument("--centroid_topic", dest=CENTROID_TOPIC, default=CENTROID_TOPIC_DEFAULT,
-                          help="Centroid topic name [{}]".format(CENTROID_TOPIC_DEFAULT))
+                          help="Centroid values topic name [{}]".format(CENTROID_TOPIC_DEFAULT))
 
 
 def vel_topic(p):
     return p.add_argument("--vel_topic", dest=VEL_TOPIC, default=VEL_TOPIC_DEFAULT,
-                          help="Velocity topic name [{}]".format(VEL_TOPIC_DEFAULT))
+                          help="Velocity values topic name [{}]".format(VEL_TOPIC_DEFAULT))
 
 
 def pc_topic(p):
     return p.add_argument("--pc_topic", dest=PC_TOPIC, default=PC_TOPIC_DEFAULT,
-                          help="Point cloud topic anme [{}]".format(PC_TOPIC_DEFAULT))
+                          help="PointCloud2 values topic name [{}]".format(PC_TOPIC_DEFAULT))
 
 
 def publish_pc(p):

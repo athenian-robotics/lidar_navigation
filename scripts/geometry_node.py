@@ -141,10 +141,10 @@ if __name__ == '__main__':
     args = setup_cli_args(cli.slice_size,
                           cli.max_mult,
                           cli.publish_rate,
-                          cli.publish_pc,
                           cli.scan_topic,
                           cli.contour_topic,
                           cli.centroid_topic,
+                          cli.publish_pc,
                           cli.pc_topic,
                           cli.log_level)
 
