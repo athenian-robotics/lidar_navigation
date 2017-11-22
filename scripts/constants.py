@@ -30,4 +30,8 @@ CENTROID_TOPIC_DEFAULT = "/centroid"
 PC_TOPIC = "pc_topic"
 PC_TOPIC_DEFAULT = "/pc2"
 
+PLOT_CONTOUR = "plot_contour"
+PLOT_POINTS = "plot_points"
+PLOT_SLICES = "plot_slices"
+
 PUBLISH_PC = "publish_pc"

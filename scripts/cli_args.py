@@ -4,6 +4,7 @@ import logging
 from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
 from constants import HTTP_DELAY_SECS, HTTP_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
 from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
+from constants import PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
 from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, PUBLISH_PC, MAX_MULT, MAX_MULT_DEFAULT
@@ -83,3 +84,18 @@ def pc_topic(p):
 def publish_pc(p):
     return p.add_argument("--publish_pc", dest=PUBLISH_PC, default=False, action="store_true",
                           help="Publish point cloud data [false]")
+
+
+def plot_contour(p):
+    return p.add_argument("--plot_contour", "--contour", dest=PLOT_CONTOUR, default=False, action="store_true",
+                          help="Plot contour [false]")
+
+
+def plot_points(p):
+    return p.add_argument("--plot_points", "--points", dest=PLOT_POINTS, default=False, action="store_true",
+                          help="Plot point cloud [false]")
+
+
+def plot_slices(p):
+    return p.add_argument("--plot_slices", "--slices", dest=PLOT_SLICES, default=False, action="store_true",
+                          help="Plot slices [false]")

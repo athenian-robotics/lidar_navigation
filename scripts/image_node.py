@@ -17,6 +17,7 @@ import cli_args  as cli
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, HTTP_FILE, HTTP_VERBOSE
+from constants import PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import InnerContour
@@ -24,12 +25,18 @@ from point2d import Point2D
 from slice import Slice
 
 
-class LidarContour(object):
+class LidarImage(object):
     def __init__(self,
-                 plot_inc=.1,
                  image_server=None,
+                 plot_contour=False,
+                 plot_points=False,
+                 plot_slices=False,
+                 plot_mult=1.05,
                  contour_topic="/contour"):
-        self.__plot_inc = plot_inc
+        self.__plot_contour = plot_contour
+        self.__plot_points = plot_points
+        self.__plot_slices = plot_slices
+        self.__plot_mult = plot_mult
         self.__image_server = image_server
 
         self.__curr_vals_lock = Lock()
@@ -74,23 +81,26 @@ class LidarContour(object):
             # Plot robot center
             plt.plot([0], [0], 'r^', markersize=8.0)
 
-            # Plot point cloud
-            plt.plot([p.x for p in all_points], [p.y for p in all_points], 'ro', markersize=2.0)
-
-            # Plot slices
-            slices = [Slice(v, v + slice_size) for v in range(0, 180, slice_size)]
-            for s in slices:
-                plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], 'b-')
-            plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], 'b-')
-
-            # Plot inner contour
-            icx = [p.x for p in nearest_points]
-            icy = [p.y for p in nearest_points]
-            plt.plot(icx, icy, 'b-')
-            plt.plot(icx, icy, 'go', markersize=4.0)
-
             # Plot centroid
             plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
+
+            # Plot point cloud
+            if self.__plot_points:
+                plt.plot([p.x for p in all_points], [p.y for p in all_points], 'ro', markersize=2.0)
+
+            # Plot slices
+            if self.__plot_slices:
+                slices = [Slice(v, v + slice_size) for v in range(0, 180, slice_size)]
+                for s in slices:
+                    plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], 'b-')
+                plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], 'b-')
+
+            # Plot inner contour
+            if self.__plot_contour:
+                icx = [p.x for p in nearest_points]
+                icy = [p.y for p in nearest_points]
+                plt.plot(icx, icy, 'b-')
+                plt.plot(icx, icy, 'go', markersize=4.0)
 
             # Write Heading
             c = Point2D(centroid.x, centroid.y)
@@ -98,7 +108,7 @@ class LidarContour(object):
 
             # Plot axis
             plt.axis(
-                [(-1 * max_dist) - self.__plot_inc, max_dist + self.__plot_inc, - 0.05, max_dist + self.__plot_inc])
+                [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05, max_dist * self.__plot_mult])
 
             if self.__image_server is not None:
                 sio = cStringIO.StringIO()
@@ -114,7 +124,11 @@ class LidarContour(object):
 
 if __name__ == '__main__':
     # Parse CLI args
-    args = setup_cli_args(cli.contour_topic, cli.log_level)
+    args = setup_cli_args(cli.contour_topic,
+                          cli.plot_contour,
+                          cli.plot_points,
+                          cli.plot_slices,
+                          cli.log_level)
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
@@ -130,7 +144,11 @@ if __name__ == '__main__':
 
     try:
         image_server.start()
-        LidarContour(image_server=image_server).generate_image()
+        image = LidarImage(image_server=image_server,
+                           plot_contour=args[PLOT_CONTOUR],
+                           plot_points=args[PLOT_POINTS],
+                           plot_slices=args[PLOT_SLICES])
+        image.generate_image()
     except KeyboardInterrupt:
         pass
     finally:

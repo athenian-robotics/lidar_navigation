@@ -16,7 +16,11 @@ from utils import setup_logging
 
 
 class LidarTeleop(object):
-    def __init__(self, max_linear=.35, max_angular=2.75, vel_topic="/cmd_vel", centroid_topic="/centroid"):
+    def __init__(self,
+                 max_linear=.35,
+                 max_angular=2.75,
+                 vel_topic="/cmd_vel",
+                 centroid_topic="/centroid"):
         self.__max_linear = max_linear
         self.__max_angular = max_angular
 
