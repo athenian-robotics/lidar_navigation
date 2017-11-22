@@ -14,7 +14,7 @@ from threading import Lock
 import rospy
 import time
 import cli_args  as cli
-from cli_args import LOG_LEVEL
+from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, HTTP_FILE, HTTP_VERBOSE
 from image_server import ImageServer

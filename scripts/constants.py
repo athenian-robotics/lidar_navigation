@@ -14,3 +14,20 @@ HTTP_FILE = "http_file"
 HTTP_DELAY_SECS = "http_delay_secs"
 HTTP_VERBOSE = "http_verbose"
 LOG_LEVEL = "loglevel"
+
+SLICE_SIZE = "slice_size"
+MAX_MULT = "max_mult"
+MAX_MULT_DEFAULT = 1.1
+SLICE_SIZE_DEFAULT = 5
+PUBLISH_RATE = "publish_rate"
+PUBLISH_RATE_DEFAULT = 30
+SCAN_TOPIC = "scan_topic"
+SCAN_TOPIC_DEFAULT = "/scan"
+CONTOUR_TOPIC = "contour_topic"
+CONTOUR_TOPIC_DEFAULT = "/contour"
+CENTROID_TOPIC = "centroid_topic"
+CENTROID_TOPIC_DEFAULT = "/centroid"
+PC_TOPIC = "pc_topic"
+PC_TOPIC_DEFAULT = "/pc2"
+
+PUBLISH_PC = "publish_pc"

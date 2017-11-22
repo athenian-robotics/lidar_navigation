@@ -13,10 +13,7 @@ class Point2D(object):
             self.__angle = 90.0
         else:
             degrees = math.degrees(math.atan(self.__y / self.__x))
-            if self.__x > 0:
-                self.__angle = degrees
-            else:
-                self.__angle = 90 + (90 - abs(degrees))
+            self.__angle = degrees if self.__x > 0 else 90 + (90 - abs(degrees))
 
     @property
     def x(self):
@@ -43,8 +40,7 @@ class Point2D(object):
         return Point(self.x, self.y, 0.0)
 
     def __str__(self):
-        return "Point({}, {}) Dist: {} Angle: {} Heading: {}".format(self.x, self.y, self.dist, self.angle,
-                                                                     self.heading)
+        return "({}, {}) Dist: {} Angle: {} Heading: {}".format(self.x, self.y, self.dist, self.angle, self.heading)
 
 
 Origin = Point2D(0, 0)

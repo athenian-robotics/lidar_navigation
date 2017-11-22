@@ -8,8 +8,8 @@ from geometry_msgs.msg import Point
 from geometry_msgs.msg import Twist
 
 import cli_args  as cli
-from cli_args import LOG_LEVEL
 from cli_args import setup_cli_args
+from constants import LOG_LEVEL
 from point2d import Point2D
 from utils import new_twist
 from utils import setup_logging
@@ -24,10 +24,10 @@ class LidarTeleop(object):
         self.__curr_centroid = None
         self.__data_available = False
 
-        rospy.loginfo("Publishing  to {}".format(vel_topic))
+        rospy.loginfo("Publishing Twist msgs to topic {}".format(vel_topic))
         self.__vel_pub = rospy.Publisher(vel_topic, Twist, queue_size=5)
 
-        rospy.loginfo("Subscribing to {}".format(centroid_topic))
+        rospy.loginfo("Subscribing to centroid topic {}".format(centroid_topic))
         self.__scan_sub = rospy.Subscriber(centroid_topic, Point, self.on_centroid)
 
     def on_centroid(self, centroid):

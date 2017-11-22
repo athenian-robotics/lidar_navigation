@@ -4,8 +4,8 @@ import rospy
 from geometry_msgs.msg import Twist
 
 import cli_args  as cli
-from cli_args import LOG_LEVEL
 from cli_args import setup_cli_args
+from constants import LOG_LEVEL
 from utils import new_twist
 from utils import setup_logging
 

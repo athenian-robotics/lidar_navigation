@@ -14,9 +14,10 @@ from sensor_msgs.msg import PointCloud2
 from shapely.geometry import Polygon
 
 import cli_args  as cli
-from cli_args import LOG_LEVEL
 from cli_args import setup_cli_args
-from image_server import ImageServer
+from constants import LOG_LEVEL
+from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC
+from constants import SLICE_SIZE, MAX_MULT, PUBLISH_PC, PUBLISH_RATE
 from point2d import Origin
 from point2d import Point2D
 from slice import Slice
@@ -26,16 +27,18 @@ from utils import setup_logging
 class LidarGeometry(object):
     def __init__(self,
                  slice_size=5,
-                 max_inc=.25,
-                 rate=30,
+                 max_mult=1.1,
+                 publish_rate=30,
+                 publish_pc=False,
                  scan_topic="/scan",
                  contour_topic="/contour",
                  centroid_topic="/centroid",
-                 pc2_topic="/pc2"):
+                 pc_topic="/pc2"):
         self.__slice_size = slice_size
-        self.__max_inc = max_inc
+        self.__max_mult = max_mult
+        self.__publish_point_cloud = publish_pc
 
-        self.__rate = rospy.Rate(rate)
+        self.__rate = rospy.Rate(publish_rate)
         self.__laser_projector = LaserProjection()
         self.__vals_lock = Lock()
         self.__all_points = []
@@ -44,16 +47,17 @@ class LidarGeometry(object):
         self.__max_dist = None
         self.__data_available = False
 
-        rospy.loginfo("Publishing  to " + pc2_topic)
-        self.__pc_pub = rospy.Publisher(pc2_topic, PointCloud2, queue_size=5)
+        if self.__publish_point_cloud:
+            rospy.loginfo("Publishing point cloud to: {}".format(pc_topic))
+            self.__pc_pub = rospy.Publisher(pc_topic, PointCloud2, queue_size=5)
 
-        rospy.loginfo("Publishing  to " + contour_topic)
+        rospy.loginfo("Publishing contour to: {}".format(contour_topic))
         self.__contour_pub = rospy.Publisher(contour_topic, InnerContour, queue_size=5)
 
-        rospy.loginfo("Publishing  to " + centroid_topic)
+        rospy.loginfo("Publishing centroid to: {}".format(centroid_topic))
         self.__centroid_pub = rospy.Publisher(centroid_topic, Point, queue_size=5)
 
-        rospy.loginfo("Subscribing to " + scan_topic)
+        rospy.loginfo("Subscribing to scan topic: {}".format(scan_topic))
         self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_scan)
 
         # Create Slices once and reset them on each iteration
@@ -62,7 +66,9 @@ class LidarGeometry(object):
     def on_scan(self, scan):
         # https://answers.ros.org/question/202787/using-pointcloud2-data-getting-xy-points-in-python/
         point_cloud = self.__laser_projector.projectLaser(scan)
-        self.__pc_pub.publish(point_cloud)
+
+        if self.__publish_point_cloud:
+            self.__pc_pub.publish(point_cloud)
 
         point_list = []
         for p in pc2.read_points(point_cloud, field_names=("x", "y", "z"), skip_nans=True):
@@ -77,7 +83,7 @@ class LidarGeometry(object):
             return
 
         # Determine outer range of points
-        max_dist = round(max([p.dist for p in point_list]) + self.__max_inc, 2)
+        max_dist = round(max([p.dist for p in point_list]) * self.__max_mult, 2)
         rospy.loginfo("Points: {} Max dist: {}".format(len(point_list), round(max_dist, 2)))
 
         # Reset all slices
@@ -136,7 +142,15 @@ class LidarGeometry(object):
 
 if __name__ == '__main__':
     # Parse CLI args
-    args = setup_cli_args(ImageServer.args, cli.log_level)
+    args = setup_cli_args(cli.slice_size,
+                          cli.max_mult,
+                          cli.publish_rate,
+                          cli.publish_pc,
+                          cli.scan_topic,
+                          cli.contour_topic,
+                          cli.centroid_topic,
+                          cli.pc_topic,
+                          cli.log_level)
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
@@ -146,10 +160,16 @@ if __name__ == '__main__':
     rospy.loginfo("Running")
 
     try:
-        LidarGeometry().eval_points()
+        lidar_geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
+                                       max_mult=args[MAX_MULT],
+                                       publish_rate=args[PUBLISH_RATE],
+                                       publish_pc=args[PUBLISH_PC],
+                                       scan_topic=args[SCAN_TOPIC],
+                                       contour_topic=args[CONTOUR_TOPIC],
+                                       centroid_topic=args[CENTROID_TOPIC],
+                                       pc_topic=args[PC_TOPIC])
+        lidar_geometry.eval_points()
     except KeyboardInterrupt:
-        pass
-    finally:
         pass
 
     rospy.loginfo("Exiting")

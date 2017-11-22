@@ -28,10 +28,10 @@ $ roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch
 ```
 
 Insert a maze model into Gazebo with:
-1) Click on the *Insert* tab
-2) Click on one of the models under ~/catkin_ws/src/liddar_navigation/models
+1) Click on the *Insert* tab.
+2) Click on one of the models under ~/catkin_ws/src/liddar_navigation/models.
 3) Align the maze model with the TurtleBot3 model.
-4) Orient the screen with *ctrl-shift* mouse movements  
+4) Orient the screen with *ctrl-shift* mouse movements.
 
 ## Launch Nodes
 
