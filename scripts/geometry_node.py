@@ -103,8 +103,8 @@ class LidarGeometry(object):
             self.__data_available = True
 
     def eval_points(self):
-        while not self.__stopped:
-            try:
+        try:
+            while not self.__stopped:
                 if not self.__data_available:
                     time.sleep(0.1)
                     continue
@@ -138,9 +138,9 @@ class LidarGeometry(object):
 
                 self.__rate.sleep()
 
-            except KeyboardInterrupt:
-                # This will prevent callstack dump on exit with ctrl-C
-                pass
+        except KeyboardInterrupt:
+            # This will prevent callstack dump on exit with ctrl-C
+            pass
 
     def stop(self):
         self.__stopped = True
