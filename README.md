@@ -51,7 +51,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 sending values to */cmd_vel* will cause problems. 
 
 
-##  Node CLI Options
+## Node CLI Options
 
 ### geometry_node.py 
 

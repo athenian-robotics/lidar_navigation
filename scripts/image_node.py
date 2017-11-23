@@ -100,9 +100,10 @@ class LidarImage(object):
             # Plot slices
             if self.__plot_slices or self.__plot_all:
                 slices = [Slice(v, v + slice_size) for v in range(0, 180, slice_size)]
+                linestyle = 'r:'
                 for s in slices:
-                    plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], 'b-')
-                plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], 'b-')
+                    plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], linestyle)
+                plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
 
             # Write Heading
             c = Point2D(centroid.x, centroid.y)

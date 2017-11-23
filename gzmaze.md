@@ -19,7 +19,7 @@ $ make
 Add the following to *.gazebo/gui.ini*:
 ```bash
 [overlay_plugins]
- filenames=libregenerate_widget.so
+filenames=libregenerate_widget.so
 ```
 
 ## Running Gazebo to Generate a Model
