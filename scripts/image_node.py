@@ -162,6 +162,7 @@ if __name__ == '__main__':
 
     try:
         Thread(target=image.generate_image).start()
+        rospy.spin()
     except KeyboardInterrupt:
         pass
     finally:
