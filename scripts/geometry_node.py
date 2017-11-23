@@ -104,38 +104,41 @@ class LidarGeometry(object):
 
     def eval_points(self):
         while not self.__stopped:
-            if not self.__data_available:
-                time.sleep(0.1)
-                continue
+            try:
+                if not self.__data_available:
+                    time.sleep(0.1)
+                    continue
 
-            with self.__vals_lock:
-                max_dist = self.__max_dist
-                all_points = self.__all_points
-                nearest_points = self.__nearest_points
-                self.__all_points = []
-                self.__data_available = False
+                with self.__vals_lock:
+                    max_dist = self.__max_dist
+                    all_points = self.__all_points
+                    nearest_points = self.__nearest_points
+                    self.__all_points = []
+                    self.__data_available = False
 
-            # Perform these outside of lock to prevent blocking on scan readings
-            # Calculate inner contour and centroid
-            nearest_with_origin = [Origin] + nearest_points + [Origin]
-            icx = [p.x for p in nearest_with_origin]
-            icy = [p.y for p in nearest_with_origin]
-            polygon = Polygon(zip(icx, icy))
-            poly_centroid = polygon.centroid
+                # Perform these outside of lock to prevent blocking on scan readings
+                # Calculate inner contour and centroid
+                nearest_with_origin = [Origin] + nearest_points + [Origin]
+                icx = [p.x for p in nearest_with_origin]
+                icy = [p.y for p in nearest_with_origin]
+                polygon = Polygon(zip(icx, icy))
+                poly_centroid = polygon.centroid
 
-            # Convert to msgs
-            ic = InnerContour()
-            ic.max_dist = max_dist
-            ic.slice_size = self.__slice_size
-            ic.all_points = np.asarray([p.to_ros_point() for p in all_points])
-            ic.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
-            ic.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
+                # Convert to msgs
+                ic = InnerContour()
+                ic.max_dist = max_dist
+                ic.slice_size = self.__slice_size
+                ic.all_points = np.asarray([p.to_ros_point() for p in all_points])
+                ic.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
+                ic.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
 
-            # Publish centroid and contour
-            self.__centroid_pub.publish(ic.centroid)
-            self.__contour_pub.publish(ic)
+                # Publish centroid and contour
+                self.__centroid_pub.publish(ic.centroid)
+                self.__contour_pub.publish(ic)
 
-            self.__rate.sleep()
+                self.__rate.sleep()
+            except KeyboardInterrupt:
+                pass
 
     def stop(self):
         self.__stopped = True

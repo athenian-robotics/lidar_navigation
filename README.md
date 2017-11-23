@@ -60,6 +60,8 @@ $ roslaunch lidar_navigation stop_node.py
 ```
 **Warning**: Stop the *teleop_node.py* node before running the *stop_node.py* node. 
 
+After stopping a crashed robot, reset the robot to the original starting position 
+with *ctrl-R*.
 
 ## Node CLI Options
 
