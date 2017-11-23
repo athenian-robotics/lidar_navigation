@@ -77,6 +77,10 @@ class LidarTeleop(object):
 
                 self.__rate.sleep()
 
+        except KeyboardInterrupt:
+            # This will prevent callstack dump on exit with ctrl-C
+            pass
+
         finally:
             # Stop robot when stopped
             rospy.loginfo("Sending stop value")
