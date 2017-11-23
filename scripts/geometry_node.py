@@ -2,6 +2,7 @@
 
 import time
 from threading import Lock
+from threading import Thread
 
 import numpy as np
 import rospy
@@ -45,6 +46,7 @@ class LidarGeometry(object):
         self.__nearest_points = []
         self.__max_dist = None
         self.__data_available = False
+        self.__stopped = False
 
         # Create Slices once and reset them on each iteration
         self.__slices = [Slice(v, v + self.__slice_size) for v in range(0, 180, self.__slice_size)]
@@ -101,7 +103,7 @@ class LidarGeometry(object):
             self.__data_available = True
 
     def eval_points(self):
-        while True:
+        while not self.__stopped:
             if not self.__data_available:
                 time.sleep(0.1)
                 continue
@@ -135,6 +137,9 @@ class LidarGeometry(object):
 
             self.__rate.sleep()
 
+    def stop(self):
+        self.__stopped = True
+
 
 if __name__ == '__main__':
     # Parse CLI args
@@ -153,19 +158,24 @@ if __name__ == '__main__':
 
     rospy.init_node('geometry_node')
 
+    geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
+                             max_mult=args[MAX_MULT],
+                             publish_rate=args[PUBLISH_RATE],
+                             publish_pc=args[PUBLISH_PC],
+                             scan_topic=args[SCAN_TOPIC],
+                             contour_topic=args[CONTOUR_TOPIC],
+                             centroid_topic=args[CENTROID_TOPIC],
+                             pc_topic=args[PC_TOPIC])
+
     rospy.loginfo("Running")
 
     try:
-        geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
-                                 max_mult=args[MAX_MULT],
-                                 publish_rate=args[PUBLISH_RATE],
-                                 publish_pc=args[PUBLISH_PC],
-                                 scan_topic=args[SCAN_TOPIC],
-                                 contour_topic=args[CONTOUR_TOPIC],
-                                 centroid_topic=args[CENTROID_TOPIC],
-                                 pc_topic=args[PC_TOPIC])
-        geometry.eval_points()
+        # Running this in a thread will enable ctrl-C exits
+        Thread(target=geometry.eval_points).start()
+        rospy.spin()
     except KeyboardInterrupt:
         pass
+    finally:
+        geometry.stop()
 
     rospy.loginfo("Exiting")

@@ -10,11 +10,11 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from threading import Lock
+from threading import Thread
 
 import rospy
 import time
 import cli_args  as cli
-from threading import Thread
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, HTTP_FILE, HTTP_VERBOSE
@@ -150,8 +150,6 @@ if __name__ == '__main__':
                                http_delay_secs=args[HTTP_DELAY_SECS],
                                http_verbose=args[HTTP_VERBOSE])
 
-    rospy.loginfo("Running")
-
     image_server.start()
     image = LidarImage(image_server=image_server,
                        plot_all=args[PLOT_ALL],
@@ -160,7 +158,10 @@ if __name__ == '__main__':
                        plot_slices=args[PLOT_SLICES],
                        plot_mult=args[PLOT_MULT])
 
+    rospy.loginfo("Running")
+
     try:
+        # Running this in a thread will enable ctrl-C exits
         Thread(target=image.generate_image).start()
         rospy.spin()
     except KeyboardInterrupt:
