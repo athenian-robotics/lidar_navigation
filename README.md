@@ -4,18 +4,21 @@
 
 Clone the *lidar_navigation* repo into *~/catkin_ws/src* with:
 ```bash
+# On Ubuntu PC
 $ cd ~/catkin_ws/src
 $ git clone https://github.com/athenian-robotics/lidar_navigation.git
 ```
 
 Install the required python modules with:
 ```bash
+# On Ubuntu PC
 $ cd ~/catkin_ws/src/lidar_navigation
 $ pip install -r requirements.txt
 ```
 
 Compile the ROS support for InnerCountour messages with:
 ```bash
+# On Ubuntu PC
 $ cd ~/catkin_ws
 $ catkin_make
 ```
@@ -44,18 +47,18 @@ Add a maze model to the empty TurtleBot3 world with:
 
 Launch the lidar navigation nodes with:
 ```bash
+# On Ubuntu PC
 $ rosrun lidar_navigation geometry_node.py
 $ rosrun lidar_navigation teleop_node.py
 $ rosrun lidar_navigation image_node.py --plot_all
 ```
 
-To stop a crashed robot, open keyboard teleop control node with: 
+Stop a crashed robot with: 
 ```bash
 # On Ubuntu PC
-$ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+$ roslaunch lidar_navigation stop_node.py
 ```
-**Warning**: Do not run the keyboard teleop node at the same time as teleop_node.py. Two nodes
-sending values to */cmd_vel* will cause problems. 
+**Warning**: Stop the *teleop_node.py* node before running the *stop_node.py* node. 
 
 
 ## Node CLI Options

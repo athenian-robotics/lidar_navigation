@@ -14,6 +14,7 @@ from threading import Lock
 import rospy
 import time
 import cli_args  as cli
+from threading import Thread
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, HTTP_FILE, HTTP_VERBOSE
@@ -48,6 +49,7 @@ class LidarImage(object):
         self.__slice_size = None
         self.__centroid = None
         self.__data_available = False
+        self.__stopped = False
 
         rospy.loginfo("Subscribing to InnerContour topic: {}".format(contour_topic))
         self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_contour)
@@ -63,7 +65,7 @@ class LidarImage(object):
             self.__data_available = True
 
     def generate_image(self):
-        while True:
+        while not self.__stopped:
             if not self.__data_available:
                 time.sleep(0.1)
                 continue
@@ -124,6 +126,8 @@ class LidarImage(object):
             # Close resources
             plt.close()
 
+    def stop(self):
+        self.__stopped = True
 
 if __name__ == '__main__':
     # Parse CLI args
@@ -148,18 +152,20 @@ if __name__ == '__main__':
 
     rospy.loginfo("Running")
 
+    image_server.start()
+    image = LidarImage(image_server=image_server,
+                       plot_all=args[PLOT_ALL],
+                       plot_points=args[PLOT_POINTS],
+                       plot_contour=args[PLOT_CONTOUR],
+                       plot_slices=args[PLOT_SLICES],
+                       plot_mult=args[PLOT_MULT])
+
     try:
-        image_server.start()
-        image = LidarImage(image_server=image_server,
-                           plot_all=args[PLOT_ALL],
-                           plot_points=args[PLOT_POINTS],
-                           plot_contour=args[PLOT_CONTOUR],
-                           plot_slices=args[PLOT_SLICES],
-                           plot_mult=args[PLOT_MULT])
-        image.generate_image()
+        Thread(target=image.generate_image).start()
     except KeyboardInterrupt:
         pass
     finally:
+        image.stop()
         image_server.stop()
 
     rospy.loginfo("Exiting")
