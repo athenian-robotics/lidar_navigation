@@ -2,7 +2,7 @@
 
 ## Setup
 
-Clone the *lidar_navigation* repo into *~/catkin_ws* with:
+Clone the *lidar_navigation* repo into *~/catkin_ws/src* with:
 ```bash
 $ cd ~/catkin_ws/src
 $ git clone https://github.com/athenian-robotics/lidar_navigation.git
@@ -34,11 +34,11 @@ Start a simulated TurtleBot3 in Gazebo with:
 $ roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch 
 ```
 
-Insert a maze model into Gazebo with:
-1) Click on the *Insert* tab.
-2) Click on one of the models under ~/catkin_ws/src/lidar_navigation/models.
-3) Align the maze model with the TurtleBot3 model.
-4) Orient the screen with *ctrl-shift* mouse movements.
+Add a maze model to the empty TurtleBot3 world with:
+1) Click on the *Insert* tab
+2) Click on one of the models under *~/catkin_ws/src/lidar_navigation/models*
+3) Align the maze model with the TurtleBot3 model
+4) Orient the screen with *ctrl-shift* mouse movements
 
 ## Launch Nodes
 

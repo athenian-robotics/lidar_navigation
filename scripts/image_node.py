@@ -133,6 +133,7 @@ if __name__ == '__main__':
                           cli.plot_slices,
                           cli.plot_mult,
                           cli.contour_topic,
+                          ImageServer.args,
                           cli.log_level)
 
     # Setup logging
