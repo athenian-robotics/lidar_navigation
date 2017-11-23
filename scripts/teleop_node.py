@@ -81,14 +81,13 @@ class LidarTeleop(object):
             # This will prevent callstack dump on exit with ctrl-C
             pass
 
-        finally:
-            # Stop robot when stopped
-            rospy.loginfo("Sending stop value")
-            self.__vel_pub.publish(new_twist(0, 0))
-            # rospy.sleep(1)
-
     def stop(self):
         self.__stopped = True
+
+    def send_stop(self):
+        # Stop robot when stopped
+        rospy.loginfo("Sending stop value")
+        self.__vel_pub.publish(new_twist(0, 0))
 
 
 if __name__ == '__main__':
@@ -123,5 +122,6 @@ if __name__ == '__main__':
         pass
     finally:
         teleop.stop()
+        teleop.send_stop()
 
     rospy.loginfo("Exiting")
