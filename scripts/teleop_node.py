@@ -90,6 +90,7 @@ if __name__ == '__main__':
                           cli.stop_angle,
                           cli.publish_rate,
                           cli.centroid_topic,
+                          cli.vel_topic,
                           cli.log_level)
 
     # Setup logging
