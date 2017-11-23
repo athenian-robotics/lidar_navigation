@@ -29,7 +29,7 @@ $ roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch
 
 Insert a maze model into Gazebo with:
 1) Click on the *Insert* tab.
-2) Click on one of the models under ~/catkin_ws/src/liddar_navigation/models.
+2) Click on one of the models under ~/catkin_ws/src/lidar_navigation/models.
 3) Align the maze model with the TurtleBot3 model.
 4) Orient the screen with *ctrl-shift* mouse movements.
 
@@ -38,8 +38,8 @@ Insert a maze model into Gazebo with:
 Launch the lidar navigation nodes with:
 ```bash
 $ rosrun lidar_navigation geometry_node.py
-$ rosrun lidar_navigation image_node.py
 $ rosrun lidar_navigation teleop_node.py
+$ rosrun lidar_navigation image_node.py
 ```
 
 To stop a crashed robot, open keyboard teleop control node with: 
@@ -47,7 +47,8 @@ To stop a crashed robot, open keyboard teleop control node with:
 # On Ubuntu PC
 $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
-Warning: Do not run keyboard teleop node at the same time as teleop_node.py 
+**Warning**: Do not run the keyboard teleop node at the same time as teleop_node.py. Two nodes
+sending values to */cmd_vel* will cause problems. 
 
 
 ##  Node CLI Options
