@@ -137,7 +137,9 @@ class LidarGeometry(object):
                 self.__contour_pub.publish(ic)
 
                 self.__rate.sleep()
+
             except KeyboardInterrupt:
+                # This will prevent callstack dump on exit with ctrl-C
                 pass
 
     def stop(self):

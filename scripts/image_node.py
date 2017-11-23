@@ -66,68 +66,75 @@ class LidarImage(object):
 
     def generate_image(self):
         while not self.__stopped:
-            if not self.__data_available:
-                time.sleep(0.1)
-                continue
+            try:
+                if not self.__data_available:
+                    time.sleep(0.1)
+                    continue
 
-            with self.__curr_vals_lock:
-                max_dist = self.__max_dist
-                slice_size = self.__slice_size
-                centroid = self.__centroid
-                all_points = self.__all_points
-                nearest_points = self.__nearest_points
-                self.__data_available = False
+                with self.__curr_vals_lock:
+                    max_dist = self.__max_dist
+                    slice_size = self.__slice_size
+                    centroid = self.__centroid
+                    all_points = self.__all_points
+                    nearest_points = self.__nearest_points
+                    self.__data_available = False
 
-            # Initialize plot
-            plt.figure(figsize=(8, 8), dpi=80)
-            plt.grid(True)
+                # Initialize plot
+                plt.figure(figsize=(8, 8), dpi=80)
+                plt.grid(True)
 
-            # Plot robot center
-            plt.plot([0], [0], 'r^', markersize=8.0)
+                # Plot robot center
+                plt.plot([0], [0], 'r^', markersize=8.0)
 
-            # Plot centroid
-            plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
+                # Plot centroid
+                plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
 
-            # Plot point cloud
-            if self.__plot_points or self.__plot_all:
-                plt.plot([p.x for p in all_points], [p.y for p in all_points], 'ro', markersize=2.0)
+                # Plot point cloud
+                if self.__plot_points or self.__plot_all:
+                    plt.plot([p.x for p in all_points], [p.y for p in all_points], 'ro', markersize=2.0)
 
-            # Plot inner contour
-            if self.__plot_contour or self.__plot_all:
-                icx = [p.x for p in nearest_points]
-                icy = [p.y for p in nearest_points]
-                plt.plot(icx, icy, 'b-')
-                plt.plot(icx, icy, 'go', markersize=4.0)
+                # Plot inner contour
+                if self.__plot_contour or self.__plot_all:
+                    icx = [p.x for p in nearest_points]
+                    icy = [p.y for p in nearest_points]
+                    plt.plot(icx, icy, 'b-')
+                    plt.plot(icx, icy, 'go', markersize=4.0)
 
-            # Plot slices
-            if self.__plot_slices or self.__plot_all:
-                slices = [Slice(v, v + slice_size) for v in range(0, 180, slice_size)]
-                linestyle = 'r:'
-                for s in slices:
-                    plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], linestyle)
-                plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
+                # Plot slices
+                if self.__plot_slices or self.__plot_all:
+                    slices = [Slice(v, v + slice_size) for v in range(0, 180, slice_size)]
+                    linestyle = 'r:'
+                    for s in slices:
+                        plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], linestyle)
+                    plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
 
-            # Write Heading
-            c = Point2D(centroid.x, centroid.y)
-            plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
+                # Write Heading
+                c = Point2D(centroid.x, centroid.y)
+                plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
 
-            # Plot axis
-            plt.axis(
-                [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05, max_dist * self.__plot_mult])
+                # Plot axis
+                plt.axis(
+                    [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05,
+                     max_dist * self.__plot_mult])
 
-            if self.__image_server is not None:
-                sio = cStringIO.StringIO()
-                plt.savefig(sio, format="jpg")
-                self.__image_server.image = sio.getvalue()
-                sio.close()
-            else:
-                plt.show()
+                if self.__image_server is not None:
+                    sio = cStringIO.StringIO()
+                    plt.savefig(sio, format="jpg")
+                    self.__image_server.image = sio.getvalue()
+                    sio.close()
+                else:
+                    plt.show()
 
-            # Close resources
-            plt.close()
+                # Close resources
+                plt.close()
+
+            except KeyboardInterrupt:
+                # This will prevent callstack dump on exit with ctrl-C
+                pass
 
     def stop(self):
         self.__stopped = True
+
 
 if __name__ == '__main__':
     # Parse CLI args
