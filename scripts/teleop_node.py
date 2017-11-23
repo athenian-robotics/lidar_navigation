@@ -84,9 +84,8 @@ class LidarTeleop(object):
         finally:
             # Stop robot when stopped
             rospy.loginfo("Sending stop value")
-            for i in range(5):
-                self.__vel_pub.publish(new_twist(0, 0))
-            rospy.sleep(1)
+            self.__vel_pub.publish(new_twist(0, 0))
+            # rospy.sleep(1)
 
     def stop(self):
         self.__stopped = True
