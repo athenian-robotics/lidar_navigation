@@ -36,10 +36,10 @@ class LidarTeleop(object):
         self.__data_available = False
         self.__stopped = False
 
-        rospy.loginfo("Publishing Twist vals to topic: {}".format(vel_topic))
+        rospy.loginfo("Publishing Twist vals to topic {}".format(vel_topic))
         self.__vel_pub = rospy.Publisher(vel_topic, Twist, queue_size=5)
 
-        rospy.loginfo("Subscribing to Point topic: {}".format(centroid_topic))
+        rospy.loginfo("Subscribing to Point topic {}".format(centroid_topic))
         self.__scan_sub = rospy.Subscriber(centroid_topic, Point, self.on_centroid)
 
     def on_centroid(self, centroid):

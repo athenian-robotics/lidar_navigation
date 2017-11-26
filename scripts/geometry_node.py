@@ -18,7 +18,7 @@ import cli_args  as cli
 from cli_args import setup_cli_args
 from constants import LOG_LEVEL
 from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC
-from constants import SLICE_SIZE, MAX_MULT, PUBLISH_PC, PUBLISH_RATE
+from constants import SLICE_SIZE, SLICE_OFFSET, MAX_MULT, PUBLISH_PC, PUBLISH_RATE
 from point2d import Origin
 from point2d import Point2D
 from slice import Slice
@@ -28,6 +28,7 @@ from utils import setup_logging
 class LidarGeometry(object):
     def __init__(self,
                  slice_size=5,
+                 slice_offset=0,
                  max_mult=1.1,
                  publish_rate=30,
                  publish_pc=False,
@@ -36,6 +37,7 @@ class LidarGeometry(object):
                  centroid_topic="/centroid",
                  pc_topic="/pc2"):
         self.__slice_size = slice_size
+        self.__slice_offset = slice_offset
         self.__max_mult = max_mult
         self.__publish_point_cloud = publish_pc
 
@@ -51,17 +53,17 @@ class LidarGeometry(object):
         # Create Slices once and reset them on each iteration
         self.__slices = [Slice(v, v + self.__slice_size) for v in range(0, 180, self.__slice_size)]
 
-        rospy.loginfo("Publishing InnerContour vals to topic: {}".format(contour_topic))
+        rospy.loginfo("Publishing InnerContour vals to topic {}".format(contour_topic))
         self.__contour_pub = rospy.Publisher(contour_topic, InnerContour, queue_size=5)
 
-        rospy.loginfo("Publishing Point vals to topic: {}".format(centroid_topic))
+        rospy.loginfo("Publishing Point vals to topic {}".format(centroid_topic))
         self.__centroid_pub = rospy.Publisher(centroid_topic, Point, queue_size=5)
 
         if self.__publish_point_cloud:
-            rospy.loginfo("Publishing PointCloud2 vals to topic: {}".format(pc_topic))
+            rospy.loginfo("Publishing PointCloud2 vals to topic {}".format(pc_topic))
             self.__pc_pub = rospy.Publisher(pc_topic, PointCloud2, queue_size=5)
 
-        rospy.loginfo("Subscribing to LaserScan topic: {}".format(scan_topic))
+        rospy.loginfo("Subscribing to LaserScan topic {}".format(scan_topic))
         self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_scan)
 
     def on_scan(self, scan):
@@ -99,7 +101,10 @@ class LidarGeometry(object):
         with self.__vals_lock:
             self.__max_dist = max_dist
             self.__all_points = point_list
-            self.__nearest_points = [s.nearest for s in self.__slices]
+            if self.__slice_offset == 0:
+                self.__nearest_points = [s.nearest for s in self.__slices]
+            else:
+                self.__nearest_points = [s.nearest for s in self.__slices[self.__slice_offset:-1 * self.__slice_offset]]
             self.__data_available = True
 
     def eval_points(self):
@@ -149,6 +154,7 @@ class LidarGeometry(object):
 if __name__ == '__main__':
     # Parse CLI args
     args = setup_cli_args(cli.slice_size,
+                          cli.slice_offset,
                           cli.max_mult,
                           cli.publish_rate,
                           cli.scan_topic,
@@ -164,6 +170,7 @@ if __name__ == '__main__':
     rospy.init_node('geometry_node')
 
     geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
+                             slice_offset=args[SLICE_OFFSET],
                              max_mult=args[MAX_MULT],
                              publish_rate=args[PUBLISH_RATE],
                              publish_pc=args[PUBLISH_PC],

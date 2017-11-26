@@ -5,10 +5,10 @@ from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC
 from constants import HTTP_DELAY_SECS, TEMPLATE_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
 from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
 from constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
-from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
+from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES
 from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, PLOT_MULT, PLOT_MULT_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
-from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, PUBLISH_PC, MAX_MULT, MAX_MULT_DEFAULT
+from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_MULT, MAX_MULT_DEFAULT
 from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT
 
 
@@ -51,6 +51,11 @@ def log_level(p):
 def slice_size(p):
     return p.add_argument("--slice_size", dest=SLICE_SIZE, default=SLICE_SIZE_DEFAULT, type=int,
                           help="Slice size degrees [{0}]".format(SLICE_SIZE_DEFAULT))
+
+
+def slice_offset(p):
+    return p.add_argument("--slice_offset", dest=SLICE_OFFSET, default=0, type=int,
+                          help="Slice offset [0]")
 
 
 def max_mult(p):
@@ -110,6 +115,11 @@ def plot_points(p):
 def plot_contour(p):
     return p.add_argument("--plot_contour", "--contour", dest=PLOT_CONTOUR, default=False, action="store_true",
                           help="Plot contour [false]")
+
+
+def plot_centroid(p):
+    return p.add_argument("--plot_centroid", "--centroid", dest=PLOT_CENTROID, default=False, action="store_true",
+                          help="Plot centroid [false]")
 
 
 def plot_slices(p):
