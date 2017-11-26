@@ -87,8 +87,10 @@ class LidarImage(object):
             # Plot robot center
             plt.plot([0], [0], 'r^', markersize=8.0)
 
-            # Plot centroid
+            # Plot centroid and write heading
             if self.__plot_centroid or self.__plot_all:
+                c = Point2D(centroid.x, centroid.y)
+                plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
                 plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
 
             # Plot point cloud
@@ -109,10 +111,6 @@ class LidarImage(object):
                 for s in slices:
                     plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], linestyle)
                 plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
-
-            # Write Heading
-            c = Point2D(centroid.x, centroid.y)
-            plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
 
             # Plot axis
             plt.axis(

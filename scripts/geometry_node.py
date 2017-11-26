@@ -100,11 +100,7 @@ class LidarGeometry(object):
         # Pass the values to be plotted
         with self.__vals_lock:
             self.__max_dist = max_dist
-            self.__all_points = point_list
-            if self.__slice_offset == 0:
-                self.__nearest_points = [s.nearest for s in self.__slices]
-            else:
-                self.__nearest_points = [s.nearest for s in self.__slices[self.__slice_offset:-1 * self.__slice_offset]]
+            self.__nearest_points = [s.nearest for s in self.__slices]
             self.__data_available = True
 
     def eval_points(self):
@@ -117,9 +113,15 @@ class LidarGeometry(object):
                 with self.__vals_lock:
                     max_dist = self.__max_dist
                     all_points = self.__all_points
-                    nearest_points = self.__nearest_points
+                    if self.__slice_offset == 0:
+                        nearest_points = self.__nearest_points
+                    else:
+                        nearest_points = self.__nearest_points[self.__slice_offset:-1 * self.__slice_offset]
                     self.__all_points = []
                     self.__data_available = False
+
+                if len(nearest_points) == 0:
+                    continue
 
                 # Perform these outside of lock to prevent blocking on scan readings
                 # Calculate inner contour and centroid
