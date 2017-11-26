@@ -23,6 +23,7 @@ from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import InnerContour
 from point2d import Point2D
+from point2d import Origin
 from slice import Slice
 
 
@@ -99,8 +100,9 @@ class LidarImage(object):
 
             # Plot inner contour
             if self.__plot_contour or self.__plot_all:
-                icx = [p.x for p in nearest_points]
-                icy = [p.y for p in nearest_points]
+                nearest_with_origin = [Origin] + nearest_points + [Origin]
+                icx = [p.x for p in nearest_with_origin]
+                icy = [p.y for p in nearest_with_origin]
                 plt.plot(icx, icy, 'b-')
                 plt.plot(icx, icy, 'go', markersize=4.0)
 
