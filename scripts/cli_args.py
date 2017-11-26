@@ -139,4 +139,4 @@ def max_angular(p):
 
 def stop_angle(p):
     return p.add_argument("--stop_angle", dest=STOP_ANGLE, default=STOP_ANGLE_DEFAULT, type=int,
-                          help="Full stop angle [{0}]".format(STOP_ANGLE_DEFAULT))
+                          help="Linear stop angle [{0}]".format(STOP_ANGLE_DEFAULT))
