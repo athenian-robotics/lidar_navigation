@@ -21,7 +21,7 @@ if __name__ == '__main__':
     rospy.loginfo("Running")
 
     vel_topic = "/cmd_vel"
-    rospy.loginfo("Publishing Twist vals to topic {}".format(vel_topic))
+    rospy.loginfo("Publishing Twist vals to topic: {}".format(vel_topic))
     vel_pub = rospy.Publisher(vel_topic, Twist, queue_size=5)
     rospy.sleep(1)
 

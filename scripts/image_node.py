@@ -18,12 +18,11 @@ import cli_args  as cli
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
-from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
+from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import InnerContour
 from point2d import Point2D
-from point2d import Origin
 from slice import Slice
 
 
@@ -32,7 +31,6 @@ class LidarImage(object):
                  image_server=None,
                  plot_all=False,
                  plot_contour=False,
-                 plot_centroid=False,
                  plot_points=False,
                  plot_slices=False,
                  plot_mult=1.05,
@@ -40,7 +38,6 @@ class LidarImage(object):
         self.__plot_all = plot_all
         self.__plot_points = plot_points
         self.__plot_contour = plot_contour
-        self.__plot_centroid = plot_centroid
         self.__plot_slices = plot_slices
         self.__plot_mult = plot_mult
         self.__image_server = image_server
@@ -54,7 +51,7 @@ class LidarImage(object):
         self.__data_available = False
         self.__stopped = False
 
-        rospy.loginfo("Subscribing to InnerContour topic {}".format(contour_topic))
+        rospy.loginfo("Subscribing to InnerContour topic: {}".format(contour_topic))
         self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_contour)
 
     def on_contour(self, contour):
@@ -88,11 +85,8 @@ class LidarImage(object):
             # Plot robot center
             plt.plot([0], [0], 'r^', markersize=8.0)
 
-            # Plot centroid and write heading
-            if self.__plot_centroid or self.__plot_all:
-                c = Point2D(centroid.x, centroid.y)
-                plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
-                plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
+            # Plot centroid
+            plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
 
             # Plot point cloud
             if self.__plot_points or self.__plot_all:
@@ -100,9 +94,8 @@ class LidarImage(object):
 
             # Plot inner contour
             if self.__plot_contour or self.__plot_all:
-                nearest_with_origin = [Origin] + nearest_points + [Origin]
-                icx = [p.x for p in nearest_with_origin]
-                icy = [p.y for p in nearest_with_origin]
+                icx = [p.x for p in nearest_points]
+                icy = [p.y for p in nearest_points]
                 plt.plot(icx, icy, 'b-')
                 plt.plot(icx, icy, 'go', markersize=4.0)
 
@@ -113,6 +106,10 @@ class LidarImage(object):
                 for s in slices:
                     plt.plot([s.begin_point(max_dist).x, 0], [s.begin_point(max_dist).y, 0], linestyle)
                 plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
+
+            # Write Heading
+            c = Point2D(centroid.x, centroid.y)
+            plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
 
             # Plot axis
             plt.axis(
@@ -139,7 +136,6 @@ if __name__ == '__main__':
     args = setup_cli_args(cli.plot_all,
                           cli.plot_points,
                           cli.plot_contour,
-                          cli.plot_centroid,
                           cli.plot_slices,
                           cli.plot_mult,
                           cli.contour_topic,
@@ -161,7 +157,6 @@ if __name__ == '__main__':
                        plot_all=args[PLOT_ALL],
                        plot_points=args[PLOT_POINTS],
                        plot_contour=args[PLOT_CONTOUR],
-                       plot_centroid=args[PLOT_CENTROID],
                        plot_slices=args[PLOT_SLICES],
                        plot_mult=args[PLOT_MULT])
 
