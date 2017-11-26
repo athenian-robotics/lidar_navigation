@@ -44,6 +44,7 @@ PUBLISH_PC = "publish_pc"
 
 MAX_LINEAR = "max_linear"
 MAX_LINEAR_DEFAULT = .35
+
 MAX_ANGULAR = "max_angular"
 MAX_ANGULAR_DEFAULT = 2.75
 
