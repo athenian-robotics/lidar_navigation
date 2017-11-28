@@ -55,7 +55,7 @@ class WallFinder(object):
                     wall_inliers = iter_inliners
                     wall_outliers = iter_outliers
 
-            if len(wall_inliers) >= len(self.__min_points):
+            if len(wall_inliers) >= self.__min_points:
                 wall_points = wall_outliers
                 yield Wall(wall_p0, wall_p1, wall_inliers)
             else:
