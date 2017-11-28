@@ -35,6 +35,9 @@ class WallFinder(object):
         # Return all walls with size of min_points
         wall_points = [p for p in self.__points]
         while True:
+            if len(wall_points) < 2:
+                return
+
             wall_inliers = []
             wall_outliers = []
             wall_p0 = None
