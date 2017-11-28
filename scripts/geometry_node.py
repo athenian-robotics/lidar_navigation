@@ -64,11 +64,11 @@ class LidarGeometry(object):
             self.__pc_pub = rospy.Publisher(pc_topic, PointCloud2, queue_size=5)
 
         rospy.loginfo("Subscribing to LaserScan topic {}".format(scan_topic))
-        self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_scan)
+        self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_msg)
 
-    def on_scan(self, scan):
+    def on_msg(self, scan_msg):
         # https://answers.ros.org/question/202787/using-pointcloud2-data-getting-xy-points-in-python/
-        point_cloud = self.__laser_projector.projectLaser(scan)
+        point_cloud = self.__laser_projector.projectLaser(scan_msg)
 
         if self.__publish_point_cloud:
             self.__pc_pub.publish(point_cloud)

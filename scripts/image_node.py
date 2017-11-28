@@ -55,16 +55,16 @@ class LidarImage(object):
         self.__stopped = False
 
         rospy.loginfo("Subscribing to InnerContour topic {}".format(contour_topic))
-        self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_contour)
+        self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_msg)
 
-    def on_contour(self, contour):
+    def on_msg(self, contour_msg):
         # Pass the values to be plotted
         with self.__curr_vals_lock:
-            self.__max_dist = contour.max_dist
-            self.__slice_size = contour.slice_size
-            self.__centroid = Point2D(contour.centroid.x, contour.centroid.y)
-            self.__all_points = [Point2D(p.x, p.y) for p in contour.all_points]
-            self.__nearest_points = [Point2D(p.x, p.y) for p in contour.nearest_points]
+            self.__max_dist = contour_msg.max_dist
+            self.__slice_size = contour_msg.slice_size
+            self.__centroid = Point2D(contour_msg.centroid.x, contour_msg.centroid.y)
+            self.__all_points = [Point2D(p.x, p.y) for p in contour_msg.all_points]
+            self.__nearest_points = [Point2D(p.x, p.y) for p in contour_msg.nearest_points]
             self.__data_available = True
 
     def generate_image(self):
