@@ -85,6 +85,10 @@ class LidarRansac(object):
                 all_points = self.__all_points
                 self.__data_available = False
 
+            if len(all_points) < 2:
+                rospy.loginfo("Invalid all_points")
+                continue
+
             inliers = []
             outliers = []
             for i in range(self.__iterations):
