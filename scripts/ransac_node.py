@@ -32,7 +32,7 @@ class LidarRansac(object):
     def __init__(self,
                  image_server=None,
                  iterations=20,
-                 threshold=0.1,
+                 threshold=0.05,
                  plot_all=False,
                  plot_centroid=False,
                  plot_points=False,
@@ -95,8 +95,6 @@ class LidarRansac(object):
                 p0, p1 = random_pair(all_points)
                 m, b = slopeYInt(p0, p1)
 
-                rospy.loginfo("Peforming iteration for points {} and {}".format(p0, p1))
-
                 iter_inliners = []
                 iter_outliers = []
                 for p in all_points:
@@ -126,7 +124,7 @@ class LidarRansac(object):
             # Plot point cloud
             if self.__plot_points or self.__plot_all:
                 plt.plot([p.x for p in inliers], [p.y for p in inliers], 'go', markersize=2.0)
-                plt.plot([p.x for p in outliers], [p.y for p in outliers], 'ro', markersize=2.0)
+                # plt.plot([p.x for p in outliers], [p.y for p in outliers], 'ro', markersize=2.0)
 
             # Plot slices
             if self.__plot_slices or self.__plot_all:
