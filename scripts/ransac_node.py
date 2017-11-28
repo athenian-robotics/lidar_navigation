@@ -137,8 +137,6 @@ class LidarRansac(object):
                 plt.plot([p.x for p in inliers], [p.y for p in inliers], 'go', markersize=2.0)
                 # plt.plot([p.x for p in outliers], [p.y for p in outliers], 'ro', markersize=2.0)
 
-            rospy.sleep(3)
-
             # Plot slices
             if self.__plot_slices or self.__plot_all:
                 slices = [Slice(v, v + slice_size) for v in range(0, 180, slice_size)]
@@ -162,6 +160,8 @@ class LidarRansac(object):
 
             # Close resources
             plt.close()
+
+            rospy.sleep(3)
 
     def stop(self):
         self.__stopped = True
