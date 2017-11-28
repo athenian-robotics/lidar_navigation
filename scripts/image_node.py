@@ -91,7 +91,7 @@ class LidarImage(object):
             # Plot centroid and write heading
             if self.__plot_centroid or self.__plot_all:
                 c = Point2D(centroid.x, centroid.y)
-                plt.title("Heading: {} Distance: {}".format(c.heading, round(c.dist, 2)))
+                plt.title("Heading: {} Distance: {}".format(c.heading, round(c.origin_dist, 2)))
                 plt.plot([centroid.x], [centroid.y], 'g^', markersize=8.0)
 
             # Plot point cloud

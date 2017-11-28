@@ -7,7 +7,7 @@ class Point2D(object):
     def __init__(self, x, y):
         self.__x = float(x)
         self.__y = float(y)
-        self.__dist = math.hypot(self.__x, self.__y)
+        self.__origin_dist = math.hypot(self.__x, self.__y)
 
         if self.__x == 0:
             self.__angle = 90.0
@@ -24,8 +24,8 @@ class Point2D(object):
         return self.__y
 
     @property
-    def dist(self):
-        return self.__dist
+    def origin_dist(self):
+        return self.__origin_dist
 
     @property
     def angle(self):
@@ -46,7 +46,8 @@ class Point2D(object):
         return num / math.hypot(x_diff, y_diff)
 
     def __str__(self):
-        return "({}, {}) Dist: {} Angle: {} Heading: {}".format(self.x, self.y, self.dist, self.angle, self.heading)
+        return "({}, {}) Dist: {} Angle: {} Heading: {}".format(self.x, self.y, self.origin_dist, self.angle,
+                                                                self.heading)
 
 
 Origin = Point2D(0, 0)

@@ -39,7 +39,7 @@ class Slice(object):
 
     def add_point(self, point):
         # See if point is closer than the previously closest point
-        if point.dist < self.__nearest_point.dist:
+        if point.origin_dist < self.__nearest_point.origin_dist:
             self.__nearest_point = point
 
     def reset(self, max_dist):

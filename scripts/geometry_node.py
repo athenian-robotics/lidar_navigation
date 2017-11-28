@@ -86,7 +86,7 @@ class LidarGeometry(object):
             return
 
         # Determine outer range of points
-        max_dist = round(max([p.dist for p in point_list]) * self.__max_mult, 2)
+        max_dist = round(max([p.origin_dist for p in point_list]) * self.__max_mult, 2)
         rospy.loginfo("Points: {} Max dist: {}".format(len(point_list), round(max_dist, 2)))
 
         # Reset all slices
