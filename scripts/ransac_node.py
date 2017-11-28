@@ -32,7 +32,7 @@ class LidarRansac(object):
     def __init__(self,
                  image_server=None,
                  iterations=40,
-                 threshold=0.1 / 2,
+                 threshold=0.1 / 4,
                  plot_all=False,
                  plot_centroid=False,
                  plot_points=False,
