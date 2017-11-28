@@ -32,7 +32,7 @@ class LidarRansac(object):
     def __init__(self,
                  image_server=None,
                  iterations=40,
-                 threshold=0.1,
+                 threshold=0.1 / 2,
                  plot_all=False,
                  plot_centroid=False,
                  plot_points=False,
@@ -161,7 +161,7 @@ class LidarRansac(object):
             # Close resources
             plt.close()
 
-            rospy.sleep(3)
+            rospy.sleep(2)
 
     def stop(self):
         self.__stopped = True
