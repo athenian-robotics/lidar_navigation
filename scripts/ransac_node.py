@@ -161,8 +161,8 @@ def random_pair(points):
     if cnt < 2:
         return None, None
     while True:
-        index0 = random.uniform(0, cnt)
-        index1 = random.uniform(0, cnt)
+        index0 = int(random.uniform(0, cnt))
+        index1 = int(random.uniform(0, cnt))
         if index0 != index1:
             return points[index0], points[index1]
 
