@@ -124,7 +124,7 @@ class LidarGeometry(object):
                     continue
 
                 # Perform these outside of lock to prevent blocking on scan readings
-                # Calculate inner contour and centroid
+                # Calculate contour and centroid
                 nearest_with_origin = [Origin] + nearest_points + [Origin]
                 icx = [p.x for p in nearest_with_origin]
                 icy = [p.y for p in nearest_with_origin]

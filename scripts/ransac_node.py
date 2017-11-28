@@ -93,6 +93,8 @@ class LidarRansac(object):
             outliers = []
             final_m = None
             final_b = None
+            final_p0 = None
+            final_p1 = None
             for i in range(self.__iterations):
                 p0, p1 = random_pair(all_points)
                 m, b = slopeYInt(p0, p1)
@@ -111,9 +113,10 @@ class LidarRansac(object):
                     outliers = iter_outliers
                     final_m = m
                     final_b = b
+                    final_p0 = p0
+                    final_p1 = p1
 
-            rospy.loginfo(
-                "Iteration found wall with {} items slope: {} yint: {}".format(len(inliers), final_m, final_b))
+            rospy.loginfo("Found wall with {} items slope: {} yint: {}".format(len(inliers), final_m, final_b))
 
             # Initialize plot
             plt.figure(figsize=(8, 8), dpi=80)
@@ -130,8 +133,11 @@ class LidarRansac(object):
 
             # Plot point cloud
             if self.__plot_points or self.__plot_all:
+                plt.plot([final_p0.x, final_p1.x], [final_p0.y, final_p1.y], 'r^', markersize=6.0)
                 plt.plot([p.x for p in inliers], [p.y for p in inliers], 'go', markersize=2.0)
                 # plt.plot([p.x for p in outliers], [p.y for p in outliers], 'ro', markersize=2.0)
+
+            rospy.sleep(3)
 
             # Plot slices
             if self.__plot_slices or self.__plot_all:

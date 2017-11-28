@@ -98,7 +98,7 @@ class LidarImage(object):
             if self.__plot_points or self.__plot_all:
                 plt.plot([p.x for p in all_points], [p.y for p in all_points], 'ro', markersize=2.0)
 
-            # Plot inner contour
+            # Plot contour
             if self.__plot_contour or self.__plot_all:
                 nearest_with_origin = [Origin] + nearest_points + [Origin]
                 icx = [p.x for p in nearest_with_origin]
