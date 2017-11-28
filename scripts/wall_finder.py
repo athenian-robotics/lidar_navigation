@@ -54,6 +54,8 @@ class WallFinder(object):
                 if len(iter_inliners) > len(wall_inliers):
                     wall_inliers = iter_inliners
                     wall_outliers = iter_outliers
+                    wall_p0 = p0
+                    wall_p1 = p1
 
             if len(wall_inliers) >= self.__min_points:
                 wall_points = wall_outliers
