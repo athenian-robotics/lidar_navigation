@@ -32,7 +32,7 @@ class LidarRansac(object):
     def __init__(self,
                  image_server=None,
                  iterations=20,
-                 threshold=0.05,
+                 threshold=0.1,
                  plot_all=False,
                  plot_centroid=False,
                  plot_points=False,
@@ -107,6 +107,8 @@ class LidarRansac(object):
                 if len(iter_inliners) > len(inliers):
                     inliers = iter_inliners
                     outliers = iter_outliers
+
+            rospy.loginfo("Iteration found wall with {} items".format(len(inliers)))
 
             # Initialize plot
             plt.figure(figsize=(8, 8), dpi=80)
