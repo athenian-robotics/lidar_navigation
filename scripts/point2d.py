@@ -39,6 +39,12 @@ class Point2D(object):
     def to_ros_point(self):
         return Point(self.x, self.y, 0.0)
 
+    def distance_to_line(self, p0, p1):
+        x_diff = p1.x - p0.x
+        y_diff = p1.y - p0.y
+        num = abs(y_diff * self.x - x_diff * self.y + p1.x * p0.y - p1.y * p0.x)
+        return num / math.hypot(x_diff, y_diff)
+
     def __str__(self):
         return "({}, {}) Dist: {} Angle: {} Heading: {}".format(self.x, self.y, self.dist, self.angle, self.heading)
 

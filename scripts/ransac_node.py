@@ -102,7 +102,7 @@ class LidarRansac(object):
                 iter_inliners = []
                 iter_outliers = []
                 for p in all_points:
-                    dist = abs(p.y - (p.x * m) + b)
+                    dist = p.distance_to_line(p0, p1)
                     if dist <= self.__threshold:
                         iter_inliners.append(p)
                     else:
