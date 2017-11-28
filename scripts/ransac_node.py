@@ -108,7 +108,7 @@ class LidarRansac(object):
                                     min_points=self.__min_points,
                                     points=all_points).walls():
                     plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'r^', markersize=6.0)
-                    plt.plot([p.x for p in w.inliers], [p.y for p in w.points], 'go', markersize=2.0)
+                    plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
 
             # Plot axis
             plt.axis(
