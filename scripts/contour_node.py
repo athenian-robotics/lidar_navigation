@@ -149,7 +149,7 @@ if __name__ == '__main__':
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    rospy.init_node('image_node')
+    rospy.init_node('contour_node')
 
     image_server = ImageServer(template_file=args[TEMPLATE_FILE],
                                http_host=args[HTTP_HOST],
