@@ -32,7 +32,7 @@ class LidarRansac(object):
                  image_server=None,
                  iterations=20,
                  threshold=0.025,
-                 min_points=10,
+                 min_points=20,
                  plot_all=False,
                  plot_centroid=False,
                  plot_points=False,
