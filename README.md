@@ -16,7 +16,7 @@ $ cd ~/catkin_ws/src/lidar_navigation
 $ pip install -r requirements.txt
 ```
 
-Compile the ROS support for InnerCountour messages with:
+Compile the ROS support for Contour messages with:
 ```bash
 # On Ubuntu PC
 $ cd ~/catkin_ws
@@ -83,7 +83,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 | --max_mult       | Maximum distance multiplier                        | 1.1            |
 | --publish_rate   | Publish rate                                       | 30             |
 | --scan_topic     | LaserScan values topic name                        | /scan          |
-| --contour_topic  | InnerContour value topic name                      | /contour       |
+| --contour_topic  | Contour value topic name                           | /contour       |
 | --centroid_topic | Centroid Point value topic name                    | /centroid      |
 | --publish_pc     | Publish point cloud values                         | false          |
 | --pc_topic       | PointCloud2 values topic name                      | /pc2           |
@@ -112,7 +112,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 | --plot_centroid  | Plot centroid                                      | false          |
 | --plot_slices    | Plot slices                                        | false          |
 | --plot_mult      | Maximum plot multiplier                            | 1.05           |
-| --contour_topic  | InnerContour value topic name                      | /contour       |
+| --contour_topic  | Contour value topic name                           | /contour       |
 | --template_file  | Template file name                                 | /html/plot-image.html |
 | --http           | HTTP hostname:port                                 | localhost:8080 |
 | --http_delay     | HTTP delay secs                                    | 0              |

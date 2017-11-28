@@ -9,7 +9,7 @@ import rospy
 import sensor_msgs.point_cloud2 as pc2
 from geometry_msgs.msg import Point
 from laser_geometry import LaserProjection
-from lidar_navigation.msg import InnerContour
+from lidar_navigation.msg import Contour
 from sensor_msgs.msg import LaserScan
 from sensor_msgs.msg import PointCloud2
 from shapely.geometry import Polygon
@@ -53,8 +53,8 @@ class LidarGeometry(object):
         # Create Slices once and reset them on each iteration
         self.__slices = [Slice(v, v + self.__slice_size) for v in range(0, 180, self.__slice_size)]
 
-        rospy.loginfo("Publishing InnerContour vals to topic {}".format(contour_topic))
-        self.__contour_pub = rospy.Publisher(contour_topic, InnerContour, queue_size=5)
+        rospy.loginfo("Publishing Contour vals to topic {}".format(contour_topic))
+        self.__contour_pub = rospy.Publisher(contour_topic, Contour, queue_size=5)
 
         rospy.loginfo("Publishing Point vals to topic {}".format(centroid_topic))
         self.__centroid_pub = rospy.Publisher(centroid_topic, Point, queue_size=5)
@@ -132,16 +132,16 @@ class LidarGeometry(object):
                 poly_centroid = polygon.centroid
 
                 # Convert to msgs
-                ic = InnerContour()
-                ic.max_dist = max_dist
-                ic.slice_size = self.__slice_size
-                ic.all_points = np.asarray([p.to_ros_point() for p in all_points])
-                ic.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
-                ic.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
+                c = Contour()
+                c.max_dist = max_dist
+                c.slice_size = self.__slice_size
+                c.all_points = np.asarray([p.to_ros_point() for p in all_points])
+                c.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
+                c.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
 
                 # Publish centroid and contour
-                self.__centroid_pub.publish(ic.centroid)
-                self.__contour_pub.publish(ic)
+                self.__centroid_pub.publish(c.centroid)
+                self.__contour_pub.publish(c)
 
                 self.__rate.sleep()
 

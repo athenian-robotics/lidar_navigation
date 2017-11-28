@@ -23,7 +23,7 @@ from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
 from constants import PLOT_ALL, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
 from image_server import ImageServer
 from utils import setup_logging
-from lidar_navigation.msg import InnerContour
+from lidar_navigation.msg import Contour
 from point2d import Point2D
 from slice import Slice
 
@@ -57,8 +57,8 @@ class LidarRansac(object):
         self.__data_available = False
         self.__stopped = False
 
-        rospy.loginfo("Subscribing to InnerContour topic {}".format(contour_topic))
-        self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_msg)
+        rospy.loginfo("Subscribing to Contour topic {}".format(contour_topic))
+        self.__contour_sub = rospy.Subscriber(contour_topic, Contour, self.on_msg)
 
         random.seed(0)
 
@@ -91,6 +91,8 @@ class LidarRansac(object):
 
             inliers = []
             outliers = []
+            final_m = None
+            final_b = None
             for i in range(self.__iterations):
                 p0, p1 = random_pair(all_points)
                 m, b = slopeYInt(p0, p1)
@@ -107,8 +109,11 @@ class LidarRansac(object):
                 if len(iter_inliners) > len(inliers):
                     inliers = iter_inliners
                     outliers = iter_outliers
+                    final_m = m
+                    final_b = b
 
-            rospy.loginfo("Iteration found wall with {} items".format(len(inliers)))
+            rospy.loginfo(
+                "Iteration found wall with {} items slope: {} yint: {}".format(len(inliers), final_m, final_b))
 
             # Initialize plot
             plt.figure(figsize=(8, 8), dpi=80)

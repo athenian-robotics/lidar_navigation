@@ -80,7 +80,7 @@ def scan_topic(p):
 
 def contour_topic(p):
     return p.add_argument("--contour_topic", dest=CONTOUR_TOPIC, default=CONTOUR_TOPIC_DEFAULT,
-                          help="InnerContour values topic name [{}]".format(CONTOUR_TOPIC_DEFAULT))
+                          help="Contour values topic name [{}]".format(CONTOUR_TOPIC_DEFAULT))
 
 
 def centroid_topic(p):

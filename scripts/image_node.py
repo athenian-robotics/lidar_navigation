@@ -21,7 +21,7 @@ from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
 from image_server import ImageServer
 from utils import setup_logging
-from lidar_navigation.msg import InnerContour
+from lidar_navigation.msg import Contour
 from point2d import Point2D
 from point2d import Origin
 from slice import Slice
@@ -54,8 +54,8 @@ class LidarImage(object):
         self.__data_available = False
         self.__stopped = False
 
-        rospy.loginfo("Subscribing to InnerContour topic {}".format(contour_topic))
-        self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_msg)
+        rospy.loginfo("Subscribing to Contour topic {}".format(contour_topic))
+        self.__contour_sub = rospy.Subscriber(contour_topic, Contour, self.on_msg)
 
     def on_msg(self, contour_msg):
         # Pass the values to be plotted
