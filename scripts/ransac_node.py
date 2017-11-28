@@ -31,7 +31,7 @@ from slice import Slice
 class LidarRansac(object):
     def __init__(self,
                  image_server=None,
-                 iterations=20,
+                 iterations=40,
                  threshold=0.1,
                  plot_all=False,
                  plot_centroid=False,
