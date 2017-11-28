@@ -109,6 +109,7 @@ class LidarRansac(object):
                                     min_points=self.__min_points,
                                     points=all_points).walls():
                     plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'r^', markersize=6.0)
+                    plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
                     plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
                     cnt += 1
                 print("Found {} walls".format(cnt))
@@ -147,7 +148,7 @@ if __name__ == '__main__':
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    rospy.init_node('ransac_node')
+    rospy.init_node('walls_node')
 
     image_server = ImageServer(template_file=args[TEMPLATE_FILE],
                                http_host=args[HTTP_HOST],
