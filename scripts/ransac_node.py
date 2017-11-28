@@ -12,34 +12,37 @@ import matplotlib.pyplot as plt
 from threading import Lock
 from threading import Thread
 
+import random
 import rospy
+import sys
 import time
 import cli_args  as cli
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
-from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
+from constants import PLOT_ALL, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import InnerContour
 from point2d import Point2D
-from point2d import Origin
 from slice import Slice
 
 
-class LidarImage(object):
+class LidarRansac(object):
     def __init__(self,
                  image_server=None,
+                 iterations=20,
+                 threshold=0.1,
                  plot_all=False,
-                 plot_contour=False,
                  plot_centroid=False,
                  plot_points=False,
                  plot_slices=False,
                  plot_mult=1.05,
                  contour_topic="/contour"):
+        self.__iterations = iterations
+        self.__threshold = threshold
         self.__plot_all = plot_all
         self.__plot_points = plot_points
-        self.__plot_contour = plot_contour
         self.__plot_centroid = plot_centroid
         self.__plot_slices = plot_slices
         self.__plot_mult = plot_mult
@@ -56,6 +59,8 @@ class LidarImage(object):
 
         rospy.loginfo("Subscribing to InnerContour topic {}".format(contour_topic))
         self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_contour)
+
+        random.seed(0)
 
     def on_contour(self, contour):
         # Pass the values to be plotted
@@ -78,8 +83,28 @@ class LidarImage(object):
                 slice_size = self.__slice_size
                 centroid = self.__centroid
                 all_points = self.__all_points
-                nearest_points = self.__nearest_points
                 self.__data_available = False
+
+            inliers = []
+            outliers = []
+            for i in range(self.__iterations):
+                p0, p1 = random_pair(all_points)
+                m, b = slopeYInt(p0, p1)
+
+                rospy.loginfo("Peforming iteration for points {} and {}".format(p0, p1))
+
+                iter_inliners = []
+                iter_outliers = []
+                for p in all_points:
+                    dist = abs(p.y - (p.x * m) + b)
+                    if dist <= self.__threshold:
+                        iter_inliners.append(p)
+                    else:
+                        iter_outliers.append(p)
+
+                if len(iter_inliners) > len(inliers):
+                    inliers = iter_inliners
+                    outliers = iter_outliers
 
             # Initialize plot
             plt.figure(figsize=(8, 8), dpi=80)
@@ -96,15 +121,8 @@ class LidarImage(object):
 
             # Plot point cloud
             if self.__plot_points or self.__plot_all:
-                plt.plot([p.x for p in all_points], [p.y for p in all_points], 'ro', markersize=2.0)
-
-            # Plot inner contour
-            if self.__plot_contour or self.__plot_all:
-                nearest_with_origin = [Origin] + nearest_points + [Origin]
-                icx = [p.x for p in nearest_with_origin]
-                icy = [p.y for p in nearest_with_origin]
-                plt.plot(icx, icy, 'b-')
-                plt.plot(icx, icy, 'go', markersize=4.0)
+                plt.plot([p.x for p in inliers], [p.y for p in inliers], 'go', markersize=2.0)
+                plt.plot([p.x for p in outliers], [p.y for p in outliers], 'ro', markersize=2.0)
 
             # Plot slices
             if self.__plot_slices or self.__plot_all:
@@ -134,11 +152,31 @@ class LidarImage(object):
         self.__stopped = True
 
 
+def random_pair(points):
+    cnt = len(points)
+    if cnt < 2:
+        return None, None
+    while True:
+        index0 = random.uniform(0, cnt)
+        index1 = random.uniform(0, cnt)
+        if index0 != index1:
+            return points[index0], points[index1]
+
+
+def slopeYInt(p0, p1):
+    xdiff = p1.x - p0.x
+    # Avoid div by zero problems by adding a little noise
+    if xdiff == 0:
+        xdiff = sys.float_info.epsilon
+    m = (p1.y - p0.y) / xdiff
+    y = p0.y - (p0.x * m)
+    return m, y
+
+
 if __name__ == '__main__':
     # Parse CLI args
     args = setup_cli_args(cli.plot_all,
                           cli.plot_points,
-                          cli.plot_contour,
                           cli.plot_centroid,
                           cli.plot_slices,
                           cli.plot_mult,
@@ -149,7 +187,7 @@ if __name__ == '__main__':
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    rospy.init_node('image_node')
+    rospy.init_node('ransac_node')
 
     image_server = ImageServer(template_file=args[TEMPLATE_FILE],
                                http_host=args[HTTP_HOST],
@@ -157,13 +195,12 @@ if __name__ == '__main__':
                                http_verbose=args[HTTP_VERBOSE])
 
     image_server.start()
-    image = LidarImage(image_server=image_server,
-                       plot_all=args[PLOT_ALL],
-                       plot_points=args[PLOT_POINTS],
-                       plot_contour=args[PLOT_CONTOUR],
-                       plot_centroid=args[PLOT_CENTROID],
-                       plot_slices=args[PLOT_SLICES],
-                       plot_mult=args[PLOT_MULT])
+    image = LidarRansac(image_server=image_server,
+                        plot_all=args[PLOT_ALL],
+                        plot_points=args[PLOT_POINTS],
+                        plot_centroid=args[PLOT_CENTROID],
+                        plot_slices=args[PLOT_SLICES],
+                        plot_mult=args[PLOT_MULT])
 
     rospy.loginfo("Running")
 
