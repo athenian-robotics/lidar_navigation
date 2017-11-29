@@ -104,6 +104,7 @@ class LidarRansac(object):
             # Plot point cloud
             if self.__plot_points or self.__plot_all:
                 cnt = 0
+                walls = []
                 for w in WallFinder(iterations=self.__iterations,
                                     threshold=self.__threshold,
                                     min_points=self.__min_points,
@@ -112,13 +113,14 @@ class LidarRansac(object):
                     # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
                     plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
 
-                    end0, end1 = w.end_points()
-                    # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
                     m, b = w.slopeYInt()
                     plt.plot([p.x for p in w.points], [(m * p.x) + b for p in w.points], 'b-')
-                    cnt += 1
-                if cnt != 3:
-                    print("Found {} walls".format(cnt))
+                    walls.append(w)
+
+                if len(walls) != 3:
+                    print("Found {} walls {} {}".format(len(walls),
+                                                        [len(w.points) for w in walls],
+                                                        [w.slopeYInt[0] for w in walls]))
 
             # Plot axis
             plt.axis([(-1 * max_dist) * self.__plot_mult,
