@@ -140,6 +140,8 @@ class LidarRansac(object):
             # Close resources
             plt.close()
 
+            rospy.sleep(1)
+
     def stop(self):
         self.__stopped = True
 
