@@ -31,7 +31,7 @@ class LidarRansac(object):
     def __init__(self,
                  image_server=None,
                  iterations=20,
-                 threshold=0.025,
+                 threshold=0.05,
                  min_points=20,
                  plot_all=False,
                  plot_centroid=False,
@@ -109,13 +109,13 @@ class LidarRansac(object):
                                     threshold=self.__threshold,
                                     min_points=self.__min_points,
                                     points=all_points).walls():
+                    walls.append(w)
                     plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'r^', markersize=6.0)
                     # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
                     plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
 
                     m, b = w.slopeYInt()
                     plt.plot([p.x for p in w.points], [(m * p.x) + b for p in w.points], 'b-')
-                    walls.append(w)
 
                 # if len(walls) != 3:
                 print("Found {} walls {} {}".format(len(walls),
@@ -123,10 +123,8 @@ class LidarRansac(object):
                                                     [w.slopeYInt()[0] for w in walls]))
 
             # Plot axis
-            plt.axis([(-1 * max_dist) * self.__plot_mult,
-                      max_dist * self.__plot_mult,
-                      - 0.05,
-                      max_dist * self.__plot_mult])
+            dist = max_dist * self.__plot_mult
+            plt.axis([-1 * dist, dist, - 0.05, dist])
 
             if self.__image_server is not None:
                 sio = cStringIO.StringIO()

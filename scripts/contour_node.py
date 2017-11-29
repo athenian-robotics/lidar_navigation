@@ -115,9 +115,8 @@ class LidarImage(object):
                 plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
 
             # Plot axis
-            plt.axis(
-                [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05,
-                 max_dist * self.__plot_mult])
+            dist = max_dist * self.__plot_mult
+            plt.axis([-1 * dist, dist, - 0.05, dist])
 
             if self.__image_server is not None:
                 sio = cStringIO.StringIO()

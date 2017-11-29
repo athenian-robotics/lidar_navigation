@@ -96,7 +96,7 @@ class Wall(object):
 
     def slopeYInt(self):
         if self.__m is None:
-            self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.__points], [p.y for p in self.__points])[0]
+            self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.points], [p.y for p in self.points])[0]
         return self.__m, self.__b
 
     def yfit(self, x):
@@ -105,7 +105,7 @@ class Wall(object):
 
     def end_points(self):
         if self.__closest is None or self.__farthest is None:
-            for p in self.__points:
+            for p in self.points:
                 if self.__closest is None or p.origin_dist < self.__closest.origin_dist:
                     self.__closest = p
 
