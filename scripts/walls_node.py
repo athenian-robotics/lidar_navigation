@@ -115,8 +115,10 @@ class LidarRansac(object):
                     plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
 
                     m, b = w.slopeYInt()
-                    # plt.plot([p.x for p in w.points], [w.yfit(p.x) for p in w.points], 'b-')
-                    plt.plot([w.xfit(p.y) for p in w.points], [p.y for p in w.points], 'b-')
+                    if m > 1 or m < -1:
+                        plt.plot([w.xfit(p.y) for p in w.points], [p.y for p in w.points], 'b-')
+                    else:
+                        plt.plot([p.x for p in w.points], [w.yfit(p.x) for p in w.points], 'b-')
 
                 # if len(walls) != 3:
                 print("Found {} walls {} {}".format(len(walls),
