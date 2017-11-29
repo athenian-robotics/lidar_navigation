@@ -118,7 +118,7 @@ class LidarRansac(object):
                     if m > 1 or m < -1:
                         plt.plot([w.xfit(p.y) for p in w.points], [p.y for p in w.points], 'b-')
                     else:
-                        plt.plot([p.x for p in w.points], [w.yfit(p.x) for p in w.points], 'b-')
+                        plt.plot([p.x for p in w.points], [w.yfit(p.x) for p in w.points], 'r-')
 
                 # if len(walls) != 3:
                 print("Found {} walls {} {}".format(len(walls),
