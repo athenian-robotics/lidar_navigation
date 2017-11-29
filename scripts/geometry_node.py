@@ -18,7 +18,7 @@ import cli_args  as cli
 from cli_args import setup_cli_args
 from constants import LOG_LEVEL
 from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC
-from constants import SLICE_SIZE, SLICE_OFFSET, MAX_MULT, PUBLISH_PC, PUBLISH_RATE
+from constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE
 from point2d import Origin
 from point2d import Point2D
 from slice import Slice
@@ -29,7 +29,7 @@ class LidarGeometry(object):
     def __init__(self,
                  slice_size=5,
                  slice_offset=0,
-                 max_mult=1.1,
+                 max_dist_mult=1.1,
                  publish_rate=30,
                  publish_pc=False,
                  scan_topic="/scan",
@@ -38,7 +38,7 @@ class LidarGeometry(object):
                  pc_topic="/pc2"):
         self.__slice_size = slice_size
         self.__slice_offset = slice_offset
-        self.__max_mult = max_mult
+        self.__max_dist_mult = max_dist_mult
         self.__publish_point_cloud = publish_pc
 
         self.__rate = rospy.Rate(publish_rate)
@@ -86,7 +86,7 @@ class LidarGeometry(object):
             return
 
         # Determine outer range of points
-        max_dist = round(max([p.origin_dist for p in point_list]) * self.__max_mult, 2)
+        max_dist = round(max([p.origin_dist for p in point_list]) * self.__max_dist_mult, 2)
         rospy.loginfo("Points: {} Max dist: {}".format(len(point_list), round(max_dist, 2)))
 
         # Reset all slices
@@ -157,7 +157,7 @@ if __name__ == '__main__':
     # Parse CLI args
     args = setup_cli_args(cli.slice_size,
                           cli.slice_offset,
-                          cli.max_mult,
+                          cli.max_dist_mult,
                           cli.publish_rate,
                           cli.scan_topic,
                           cli.contour_topic,
@@ -173,7 +173,7 @@ if __name__ == '__main__':
 
     geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
                              slice_offset=args[SLICE_OFFSET],
-                             max_mult=args[MAX_MULT],
+                             max_dist_mult=args[MAX_DIST_MULT],
                              publish_rate=args[PUBLISH_RATE],
                              publish_pc=args[PUBLISH_PC],
                              scan_topic=args[SCAN_TOPIC],

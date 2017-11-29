@@ -5,10 +5,12 @@ from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC
 from constants import HTTP_DELAY_SECS, TEMPLATE_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
 from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
 from constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
+from constants import PAUSE, ITERATIONS, ITERATIONS_DEFAULT, MIN_POINTS, MIN_POINTS_DEFAULT
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES
-from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, PLOT_MULT, PLOT_MULT_DEFAULT
+from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, MAX_AXIS_MULT, MAX_AXIS_MULT_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
-from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_MULT, MAX_MULT_DEFAULT
+from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_DIST_MULT, MAX_DIST_MULT_DEFAULT
+from constants import THRESHOLD, THRESHOLD_DEFAULT
 from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT
 
 
@@ -58,14 +60,16 @@ def slice_offset(p):
                           help="Slice offset [0]")
 
 
-def max_mult(p):
-    return p.add_argument("--max_mult", dest=MAX_MULT, default=MAX_MULT_DEFAULT, type=float,
-                          help="Maximum distance multiplier [{0}]".format(MAX_MULT_DEFAULT))
+def max_dist_mult(p):
+    return p.add_argument("--max_dist_mult", "--dist_mult", dest=MAX_DIST_MULT, default=MAX_DIST_MULT_DEFAULT,
+                          type=float,
+                          help="Maximum distance multiplier [{0}]".format(MAX_DIST_MULT_DEFAULT))
 
 
-def plot_mult(p):
-    return p.add_argument("--plot_mult", dest=PLOT_MULT, default=PLOT_MULT_DEFAULT, type=float,
-                          help="Maximum plot multiplier [{0}]".format(PLOT_MULT_DEFAULT))
+def max_axis_mult(p):
+    return p.add_argument("--max_axis_mult", "--axis_mult", dest=MAX_AXIS_MULT, default=MAX_AXIS_MULT_DEFAULT,
+                          type=float,
+                          help="Maximum axis multiplier [{0}]".format(MAX_AXIS_MULT_DEFAULT))
 
 
 def publish_rate(p):
@@ -140,3 +144,23 @@ def max_angular(p):
 def stop_angle(p):
     return p.add_argument("--stop_angle", dest=STOP_ANGLE, default=STOP_ANGLE_DEFAULT, type=int,
                           help="Linear stop angle [{0}]".format(STOP_ANGLE_DEFAULT))
+
+
+def iterations(p):
+    return p.add_argument("--iterations", "--iter", dest=ITERATIONS, default=ITERATIONS_DEFAULT, type=int,
+                          help="Iterations per RANSEC point set [{}]".format(ITERATIONS_DEFAULT))
+
+
+def min_num_points(p):
+    return p.add_argument("--min_num_points", "--min_points", dest=MIN_POINTS, default=MIN_POINTS_DEFAULT, type=int,
+                          help="Minimum number of points for a wall [{}]".format(MIN_POINTS_DEFAULT))
+
+
+def threshold_distance(p):
+    return p.add_argument("--threshold_distance", "--distance", dest=THRESHOLD, default=THRESHOLD_DEFAULT, type=float,
+                          help="Threshold point distance [{}]".format(THRESHOLD_DEFAULT))
+
+
+def pause(p):
+    return p.add_argument("--pause", dest=PAUSE, default=0, type=int,
+                          help="Pause secs per scan [0]")

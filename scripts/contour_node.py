@@ -18,7 +18,7 @@ import cli_args  as cli
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
-from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
+from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, MAX_AXIS_MULT
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import Contour
@@ -35,14 +35,14 @@ class LidarImage(object):
                  plot_centroid=False,
                  plot_points=False,
                  plot_slices=False,
-                 plot_mult=1.05,
+                 max_axis_mult=1.05,
                  contour_topic="/contour"):
         self.__plot_all = plot_all
         self.__plot_points = plot_points
         self.__plot_contour = plot_contour
         self.__plot_centroid = plot_centroid
         self.__plot_slices = plot_slices
-        self.__plot_mult = plot_mult
+        self.__max_axis_mult = max_axis_mult
         self.__image_server = image_server
 
         self.__curr_vals_lock = Lock()
@@ -115,7 +115,7 @@ class LidarImage(object):
                 plt.plot([slices[-1].end_point(max_dist).x, 0], [slices[-1].end_point(max_dist).y, 0], linestyle)
 
             # Plot axis
-            dist = max_dist * self.__plot_mult
+            dist = max_dist * self.__max_axis_mult
             plt.axis([-1 * dist, dist, - 0.05, dist])
 
             if self.__image_server is not None:
@@ -140,7 +140,7 @@ if __name__ == '__main__':
                           cli.plot_contour,
                           cli.plot_centroid,
                           cli.plot_slices,
-                          cli.plot_mult,
+                          cli.max_axis_mult,
                           cli.contour_topic,
                           ImageServer.args,
                           cli.log_level)
@@ -162,7 +162,7 @@ if __name__ == '__main__':
                        plot_contour=args[PLOT_CONTOUR],
                        plot_centroid=args[PLOT_CENTROID],
                        plot_slices=args[PLOT_SLICES],
-                       plot_mult=args[PLOT_MULT])
+                       max_axis_mult=args[MAX_AXIS_MULT])
 
     rospy.loginfo("Running")
 

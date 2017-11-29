@@ -85,7 +85,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 |:-----------------|----------------------------------------------------|----------------|
 | --slice_size     | Slice size degrees                                 | 5              |
 | --slice_offset   | Slice offset                                       | 0              |
-| --max_mult       | Maximum distance multiplier                        | 1.1            |
+| --max_dist_mult  | Maximum distance multiplier                        | 1.1            |
 | --publish_rate   | Publish rate                                       | 30             |
 | --scan_topic     | LaserScan values topic name                        | /scan          |
 | --contour_topic  | Contour value topic name                           | /contour       |
@@ -111,12 +111,13 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 
 | Option           | Description                                        | Default        |
 |:-----------------|----------------------------------------------------|----------------|
+| --pause          | Pause secs per scan                                | 0              |
 | --plot_all       | Plot all items                                     | false          |
 | --plot_points    | Plot points                                        | false          |
 | --plot_contour   | Plot contour                                       | false          |
 | --plot_centroid  | Plot centroid                                      | false          |
 | --plot_slices    | Plot slices                                        | false          |
-| --plot_mult      | Maximum plot multiplier                            | 1.05           |
+| --max_plot_mult  | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | Contour value topic name                           | /contour       |
 | --template_file  | Template file name                                 | /html/plot-image.html |
 | --http           | HTTP hostname:port                                 | localhost:8080 |
@@ -130,10 +131,14 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 
 | Option           | Description                                        | Default        |
 |:-----------------|----------------------------------------------------|----------------|
+| --iterations     | Iterations per RANSEC point set                    | 20             |
+| --min_points     | Minimum number of points for a wall                | 20             |
+| --distance       | Threshold point distance                           | 0.025          |
+| --pause          | Pause secs per scan                                | 0              |
 | --plot_all       | Plot all items                                     | false          |
 | --plot_points    | Plot points                                        | false          |
 | --plot_centroid  | Plot centroid                                      | false          |
-| --plot_mult      | Maximum plot multiplier                            | 1.05           |
+| --max_plot_mult  | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | Contour value topic name                           | /contour       |
 | --template_file  | Template file name                                 | /html/plot-image.html |
 | --http           | HTTP hostname:port                                 | localhost:8080 |

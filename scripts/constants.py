@@ -17,8 +17,8 @@ LOG_LEVEL = "loglevel"
 
 SLICE_SIZE = "slice_size"
 SLICE_OFFSET = "slice_offset"
-MAX_MULT = "max_mult"
-MAX_MULT_DEFAULT = 1.1
+MAX_DIST_MULT = "max_dist_mult"
+MAX_DIST_MULT_DEFAULT = 1.1
 SLICE_SIZE_DEFAULT = 5
 PUBLISH_RATE = "publish_rate"
 PUBLISH_RATE_DEFAULT = 30
@@ -31,8 +31,8 @@ CENTROID_TOPIC_DEFAULT = "/centroid"
 PC_TOPIC = "pc_topic"
 PC_TOPIC_DEFAULT = "/pc2"
 
-PLOT_MULT = "plot_mult"
-PLOT_MULT_DEFAULT = 1.05
+MAX_AXIS_MULT = "max_axis_mult"
+MAX_AXIS_MULT_DEFAULT = 1.05
 
 PLOT_ALL = "plot_all"
 PLOT_CONTOUR = "plot_contour"
@@ -53,3 +53,11 @@ VEL_TOPIC_DEFAULT = "/cmd_vel"
 
 STOP_ANGLE = "stop_angle"
 STOP_ANGLE_DEFAULT = 70
+
+PAUSE = "pause"
+ITERATIONS = "iterations"
+ITERATIONS_DEFAULT = 20
+MIN_POINTS = "min_points"
+MIN_POINTS_DEFAULT = 20
+THRESHOLD = "threshold"
+THRESHOLD_DEFAULT = 0.025
