@@ -66,6 +66,7 @@ class WallFinder(object):
                     wall_p1 = p1
 
             if len(wall_inliers) >= self.__min_points:
+                # Use the outliers in the next iteration to find next wall in remaining points
                 wall_points = wall_outliers
                 yield Wall(wall_p0, wall_p1, wall_inliers)
             else:
@@ -77,8 +78,6 @@ class Wall(object):
         self.__p0 = p0
         self.__p1 = p1
         self.__points = points
-        self.__closest = None
-        self.__farthest = None
         self.__m = None
         self.__b = None
 
@@ -96,7 +95,6 @@ class Wall(object):
 
     def slopeYInt(self):
         if self.__m is None:
-            # self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.points], [p.y for p in self.points])[0]
             self.__m, self.__b = stats.linregress([p.x for p in self.points], [p.y for p in self.points])[0: 2]
         return self.__m, self.__b
 
@@ -108,13 +106,3 @@ class Wall(object):
         m, b = self.slopeYInt()
         return (y - b) / m
 
-    def end_points(self):
-        if self.__closest is None or self.__farthest is None:
-            for p in self.points:
-                if self.__closest is None or p.origin_dist < self.__closest.origin_dist:
-                    self.__closest = p
-
-                if self.__farthest is None or p.origin_dist > self.__farthest.origin_dist:
-                    self.__farthest = p
-
-        return self.__closest, self.__farthest
