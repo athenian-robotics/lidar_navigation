@@ -110,15 +110,16 @@ class LidarRansac(object):
                                     min_points=self.__min_points,
                                     points=all_points).walls():
                     walls.append(w)
-                    plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'r^', markersize=6.0)
-                    # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
-                    plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
 
                     m, b = w.slopeYInt()
                     if m > 1 or m < -1:
                         plt.plot([w.xfit(p.y) for p in w.points], [p.y for p in w.points], 'b-')
+                        plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b^', markersize=6.0)
+                        plt.plot([p.x for p in w.points], [p.y for p in w.points], 'bo', markersize=2.0)
                     else:
                         plt.plot([p.x for p in w.points], [w.yfit(p.x) for p in w.points], 'r-')
+                        plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'r^', markersize=6.0)
+                        plt.plot([p.x for p in w.points], [p.y for p in w.points], 'ro', markersize=2.0)
 
                 # if len(walls) != 3:
                 print("Found {} walls {} {}".format(len(walls),
