@@ -44,7 +44,7 @@ class LidarGeometry(object):
         self.__rate = rospy.Rate(publish_rate)
         self.__laser_projector = LaserProjection()
         self.__vals_lock = Lock()
-        self.__scan_msg = None
+        self.__curr_msg = None
         self.__data_available = False
         self.__stopped = False
 
@@ -67,7 +67,7 @@ class LidarGeometry(object):
     def on_msg(self, scan_msg):
         # Pass the scan_msg
         with self.__vals_lock:
-            self.__scan_msg = scan_msg
+            self.__curr_msg = scan_msg
             self.__data_available = True
 
     def eval_points(self):
@@ -78,17 +78,18 @@ class LidarGeometry(object):
                     continue
 
                 with self.__vals_lock:
-                    scan_msg = self.__scan_msg
+                    scan_msg = self.__curr_msg
                     self.__data_available = False
 
                 # https://answers.ros.org/question/202787/using-pointcloud2-data-getting-xy-points-in-python/
                 point_cloud = self.__laser_projector.projectLaser(scan_msg)
 
+                # Publish point cloud data
                 if self.__publish_point_cloud:
                     self.__pc_pub.publish(point_cloud)
 
-                all_points = []
                 # Shift all points counter clockwise 90 degrees - switch x,y and multiply x by -1
+                all_points = []
                 for p in pc2.read_points(point_cloud, field_names=("x", "y", "z"), skip_nans=True):
                     x = -1 * p[1]
                     y = p[0]
@@ -97,7 +98,7 @@ class LidarGeometry(object):
                         all_points.append(Point2D(x, y))
 
                 if len(all_points) == 0:
-                    return
+                    continue
 
                 # Determine outer range of points
                 max_dist = round(max([p.origin_dist for p in all_points]) * self.__max_dist_mult, 2)
@@ -106,11 +107,13 @@ class LidarGeometry(object):
                 # Reset all slices
                 [s.reset(max_dist) for s in self.__slices]
 
+                # Assign each slice
                 for p in all_points:
                     # Do int division to determine which slice the point belongs to
                     slice_index = int(p.angle / self.__slice_size)
                     self.__slices[slice_index].add_point(p)
 
+                # Adjust for slice_offset, which is a subset of slices
                 nearest_points = [s.nearest for s in self.__slices]
                 if self.__slice_offset > 0:
                     nearest_points = nearest_points[self.__slice_offset:-1 * self.__slice_offset]

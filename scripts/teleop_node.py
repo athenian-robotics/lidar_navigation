@@ -32,7 +32,7 @@ class LidarTeleop(object):
 
         self.__rate = rospy.Rate(publish_rate)
         self.__curr_vals_lock = Lock()
-        self.__curr_centroid = None
+        self.__curr_msg = None
         self.__data_available = False
         self.__stopped = False
 
@@ -44,7 +44,7 @@ class LidarTeleop(object):
 
     def on_msg(self, centroid_msg):
         with self.__curr_vals_lock:
-            self.__curr_centroid = centroid_msg
+            self.__curr_msg = centroid_msg
             self.__data_available = True
 
     def perform_teleop(self):
@@ -55,9 +55,11 @@ class LidarTeleop(object):
                     continue
 
                 with self.__curr_vals_lock:
-                    # Convert the centroid from a ROS Point to a Point2D
-                    centroid = Point2D(self.__curr_centroid.x, self.__curr_centroid.y)
+                    centroid_msg = self.__curr_msg
                     self.__data_available = False
+
+                # Convert the centroid from a ROS Point to a Point2D
+                centroid = Point2D(centroid_msg.x, centroid_msg.y)
 
                 # Calculate the linear and angular values proportional to the heading
                 # In effect, slow down linear and speed up angular if a wide angle turn is necessary

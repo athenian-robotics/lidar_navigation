@@ -46,11 +46,7 @@ class LidarImage(object):
         self.__image_server = image_server
 
         self.__curr_vals_lock = Lock()
-        self.__all_points = []
-        self.__nearest_points = []
-        self.__max_dist = None
-        self.__slice_size = None
-        self.__centroid = None
+        self.__curr_msg = None
         self.__data_available = False
         self.__stopped = False
 
@@ -58,13 +54,8 @@ class LidarImage(object):
         self.__contour_sub = rospy.Subscriber(contour_topic, Contour, self.on_msg)
 
     def on_msg(self, contour_msg):
-        # Pass the values to be plotted
         with self.__curr_vals_lock:
-            self.__max_dist = contour_msg.max_dist
-            self.__slice_size = contour_msg.slice_size
-            self.__centroid = Point2D(contour_msg.centroid.x, contour_msg.centroid.y)
-            self.__all_points = [Point2D(p.x, p.y) for p in contour_msg.all_points]
-            self.__nearest_points = [Point2D(p.x, p.y) for p in contour_msg.nearest_points]
+            self.__curr_msg = contour_msg
             self.__data_available = True
 
     def generate_image(self):
@@ -74,12 +65,14 @@ class LidarImage(object):
                 continue
 
             with self.__curr_vals_lock:
-                max_dist = self.__max_dist
-                slice_size = self.__slice_size
-                centroid = self.__centroid
-                all_points = self.__all_points
-                nearest_points = self.__nearest_points
+                contour_msg = self.__curr_msg
                 self.__data_available = False
+
+            max_dist = contour_msg.max_dist
+            slice_size = contour_msg.slice_size
+            centroid = Point2D(contour_msg.centroid.x, contour_msg.centroid.y)
+            all_points = [Point2D(p.x, p.y) for p in contour_msg.all_points]
+            nearest_points = [Point2D(p.x, p.y) for p in contour_msg.nearest_points]
 
             # Initialize plot
             plt.figure(figsize=(8, 8), dpi=80)

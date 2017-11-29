@@ -51,10 +51,7 @@ class WallDetector(object):
         self.__image_server = image_server
 
         self.__curr_vals_lock = Lock()
-        self.__all_points = []
-        self.__nearest_points = []
-        self.__max_dist = None
-        self.__centroid = None
+        self.__curr_msg = None
         self.__data_available = False
         self.__stopped = False
 
@@ -64,12 +61,8 @@ class WallDetector(object):
         random.seed(0)
 
     def on_msg(self, contour_msg):
-        # Pass the values to be plotted
         with self.__curr_vals_lock:
-            self.__max_dist = contour_msg.max_dist
-            self.__centroid = Point2D(contour_msg.centroid.x, contour_msg.centroid.y)
-            self.__all_points = [Point2D(p.x, p.y) for p in contour_msg.all_points]
-            self.__nearest_points = [Point2D(p.x, p.y) for p in contour_msg.nearest_points]
+            self.__curr_msg = contour_msg
             self.__data_available = True
 
     def generate_image(self):
@@ -79,10 +72,12 @@ class WallDetector(object):
                 continue
 
             with self.__curr_vals_lock:
-                max_dist = self.__max_dist
-                centroid = self.__centroid
-                all_points = self.__all_points
+                contour_msg = self.__curr_msg
                 self.__data_available = False
+
+            max_dist = contour_msg.max_dist
+            centroid = Point2D(contour_msg.centroid.x, contour_msg.centroid.y)
+            all_points = [Point2D(p.x, p.y) for p in contour_msg.all_points]
 
             if len(all_points) < 2:
                 rospy.loginfo("Invalid all_points size: {}".format(len(all_points)))
