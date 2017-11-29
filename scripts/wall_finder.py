@@ -1,7 +1,7 @@
 import random
 
 import sys
-from scipy.optimize import curve_fit
+from scipy import stats
 
 
 def random_pair(points):
@@ -96,7 +96,9 @@ class Wall(object):
 
     def slopeYInt(self):
         if self.__m is None:
-            self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.points], [p.y for p in self.points])[0]
+            # self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.points], [p.y for p in self.points])[0]
+            self.__m, self.__b, r_value, p_value, std_err = stats.linregress([p.x for p in self.points],
+                                                                             [p.y for p in self.points])
         return self.__m, self.__b
 
     def yfit(self, x):
