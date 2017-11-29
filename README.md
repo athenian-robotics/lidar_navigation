@@ -58,15 +58,15 @@ $ rosrun lidar_navigation contour_node.py --plot_all
 $ rosrun lidar_navigation walls_node.py --plot_all
 ```
 
-Stop a crashed robot with: 
+Stop a crashed robot in Gazebo with: 
 ```bash
 # On Ubuntu PC
 $ roslaunch lidar_navigation stop_node.py
 ```
 **Warning**: Stop the *teleop_node.py* node before running the *stop_node.py* node. 
 
-After stopping a crashed robot, reset the robot to the original starting position 
-with *Ctrl+R*.
+After stopping a crashed robot in Gazebo, reset the robot to the original starting position 
+with *Ctrl+R* and restart the *geometry_node*.
 
 ## Manual robot control
 Launch keyboard teleop control with: 

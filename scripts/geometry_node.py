@@ -16,9 +16,9 @@ from shapely.geometry import Polygon
 
 import cli_args  as cli
 from cli_args import setup_cli_args
-from constants import LOG_LEVEL
-from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC
-from constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE
+from constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT
+from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC, SLICE_SIZE_DEFAULT
+from constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE, PUBLISH_RATE_DEFAULT
 from point2d import Origin
 from point2d import Point2D
 from slice import Slice
@@ -27,10 +27,10 @@ from utils import setup_logging
 
 class LidarGeometry(object):
     def __init__(self,
-                 slice_size=5,
-                 slice_offset=0,
+                 slice_size=SLICE_SIZE_DEFAULT,
+                 slice_offset=SLICE_OFFSET_DEFAULT,
                  max_dist_mult=1.1,
-                 publish_rate=30,
+                 publish_rate=PUBLISH_RATE_DEFAULT,
                  publish_pc=False,
                  scan_topic="/scan",
                  contour_topic="/contour",
@@ -44,9 +44,7 @@ class LidarGeometry(object):
         self.__rate = rospy.Rate(publish_rate)
         self.__laser_projector = LaserProjection()
         self.__vals_lock = Lock()
-        self.__all_points = []
-        self.__nearest_points = []
-        self.__max_dist = None
+        self.__scan_msg = None
         self.__data_available = False
         self.__stopped = False
 
@@ -67,41 +65,9 @@ class LidarGeometry(object):
         self.__scan_sub = rospy.Subscriber(scan_topic, LaserScan, self.on_msg)
 
     def on_msg(self, scan_msg):
-        # https://answers.ros.org/question/202787/using-pointcloud2-data-getting-xy-points-in-python/
-        point_cloud = self.__laser_projector.projectLaser(scan_msg)
-
-        if self.__publish_point_cloud:
-            self.__pc_pub.publish(point_cloud)
-
-        point_list = []
-        # Shift all points counter clockwise 90 degrees - switch x,y and multiply x by -1
-        for p in pc2.read_points(point_cloud, field_names=("x", "y", "z"), skip_nans=True):
-            x = -1 * p[1]
-            y = p[0]
-            # Track only points in front of robot -- NW and NE quadrants
-            if y >= 0:
-                point_list.append(Point2D(x, y))
-
-        if len(point_list) == 0:
-            return
-
-        # Determine outer range of points
-        max_dist = round(max([p.origin_dist for p in point_list]) * self.__max_dist_mult, 2)
-        rospy.loginfo("Points: {} Max dist: {}".format(len(point_list), round(max_dist, 2)))
-
-        # Reset all slices
-        [s.reset(max_dist) for s in self.__slices]
-
-        for p in point_list:
-            # Do int division to determine which slice the point belongs to
-            slice_index = int(p.angle / self.__slice_size)
-            self.__slices[slice_index].add_point(p)
-
-        # Pass the values to be plotted
+        # Pass the scan_msg
         with self.__vals_lock:
-            self.__max_dist = max_dist
-            self.__all_points = point_list
-            self.__nearest_points = [s.nearest for s in self.__slices]
+            self.__scan_msg = scan_msg
             self.__data_available = True
 
     def eval_points(self):
@@ -112,13 +78,42 @@ class LidarGeometry(object):
                     continue
 
                 with self.__vals_lock:
-                    max_dist = self.__max_dist
-                    all_points = self.__all_points
-                    if self.__slice_offset == 0:
-                        nearest_points = self.__nearest_points
-                    else:
-                        nearest_points = self.__nearest_points[self.__slice_offset:-1 * self.__slice_offset]
+                    scan_msg = self.__scan_msg
                     self.__data_available = False
+
+                # https://answers.ros.org/question/202787/using-pointcloud2-data-getting-xy-points-in-python/
+                point_cloud = self.__laser_projector.projectLaser(scan_msg)
+
+                if self.__publish_point_cloud:
+                    self.__pc_pub.publish(point_cloud)
+
+                all_points = []
+                # Shift all points counter clockwise 90 degrees - switch x,y and multiply x by -1
+                for p in pc2.read_points(point_cloud, field_names=("x", "y", "z"), skip_nans=True):
+                    x = -1 * p[1]
+                    y = p[0]
+                    # Track only points in front of robot -- NW and NE quadrants
+                    if y >= 0:
+                        all_points.append(Point2D(x, y))
+
+                if len(all_points) == 0:
+                    return
+
+                # Determine outer range of points
+                max_dist = round(max([p.origin_dist for p in all_points]) * self.__max_dist_mult, 2)
+                rospy.loginfo("Points: {} Max dist: {}".format(len(all_points), round(max_dist, 2)))
+
+                # Reset all slices
+                [s.reset(max_dist) for s in self.__slices]
+
+                for p in all_points:
+                    # Do int division to determine which slice the point belongs to
+                    slice_index = int(p.angle / self.__slice_size)
+                    self.__slices[slice_index].add_point(p)
+
+                nearest_points = [s.nearest for s in self.__slices]
+                if self.__slice_offset > 0:
+                    nearest_points = nearest_points[self.__slice_offset:-1 * self.__slice_offset]
 
                 if len(nearest_points) == 0:
                     continue

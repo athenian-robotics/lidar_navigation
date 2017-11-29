@@ -10,7 +10,7 @@ from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_S
 from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, MAX_AXIS_MULT, MAX_AXIS_MULT_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_DIST_MULT, MAX_DIST_MULT_DEFAULT
-from constants import THRESHOLD, THRESHOLD_DEFAULT
+from constants import THRESHOLD, THRESHOLD_DEFAULT, SLICE_OFFSET_DEFAULT
 from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT
 
 
@@ -56,8 +56,8 @@ def slice_size(p):
 
 
 def slice_offset(p):
-    return p.add_argument("--slice_offset", dest=SLICE_OFFSET, default=0, type=int,
-                          help="Slice offset [0]")
+    return p.add_argument("--slice_offset", dest=SLICE_OFFSET, default=SLICE_OFFSET_DEFAULT, type=int,
+                          help="Slice offset [{}]".format(SLICE_OFFSET_DEFAULT))
 
 
 def max_dist_mult(p):
