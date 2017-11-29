@@ -120,7 +120,7 @@ class LidarRansac(object):
                 # if len(walls) != 3:
                 print("Found {} walls {} {}".format(len(walls),
                                                     [len(w.points) for w in walls],
-                                                    [(w.slopeYInt)[0] for w in walls]))
+                                                    [w.slopeYInt()[0] for w in walls]))
 
             # Plot axis
             plt.axis([(-1 * max_dist) * self.__plot_mult,
