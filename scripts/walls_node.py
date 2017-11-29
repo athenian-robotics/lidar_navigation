@@ -31,7 +31,7 @@ class LidarRansac(object):
     def __init__(self,
                  image_server=None,
                  iterations=20,
-                 threshold=0.025 / 2,
+                 threshold=0.025,
                  min_points=20,
                  plot_all=False,
                  plot_centroid=False,
@@ -109,15 +109,22 @@ class LidarRansac(object):
                                     min_points=self.__min_points,
                                     points=all_points).walls():
                     plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'r^', markersize=6.0)
-                    plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
+                    # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
                     plt.plot([p.x for p in w.points], [p.y for p in w.points], 'go', markersize=2.0)
+
+                    end0, end1 = w.end_points()
+                    # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
+                    plt.plot([end0.x, end1.x], [w.fit(end0.x), w.fit(end1.x)], 'b-')
+
                     cnt += 1
-                print("Found {} walls".format(cnt))
+                if cnt != 3:
+                    print("Found {} walls".format(cnt))
 
             # Plot axis
-            plt.axis(
-                [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05,
-                 max_dist * self.__plot_mult])
+            plt.axis([(-1 * max_dist) * self.__plot_mult,
+                      max_dist * self.__plot_mult,
+                      - 0.05,
+                      max_dist * self.__plot_mult])
 
             if self.__image_server is not None:
                 sio = cStringIO.StringIO()

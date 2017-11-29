@@ -1,6 +1,7 @@
 import random
 
 import sys
+from scipy.optimize import curve_fit
 
 
 def random_pair(points):
@@ -22,6 +23,10 @@ def slopeYInt(p0, p1):
     m = (p1.y - p0.y) / xdiff
     y = p0.y - (p0.x * m)
     return m, y
+
+
+def straight_line(x, m, b):
+    return (m * x) + b
 
 
 class WallFinder(object):
@@ -74,6 +79,8 @@ class Wall(object):
         self.__points = points
         self.__closest = None
         self.__farthest = None
+        self.__m = None
+        self.__b = None
 
     @property
     def p0(self):
@@ -86,6 +93,15 @@ class Wall(object):
     @property
     def points(self):
         return self.__points
+
+    def slopeYInt(self):
+        if self.__m is None:
+            self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.__points], [p.y for p in self.__points])
+        return self.__m, self.__b
+
+    def fit(self, x):
+        m, b = self.slopeYInt()
+        return (m * x) + b
 
     def end_points(self):
         if self.__closest is None or self.__farthest is None:

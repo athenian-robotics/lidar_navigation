@@ -2,3 +2,4 @@ shapely
 matplotlib
 flask
 requests
+scipy
