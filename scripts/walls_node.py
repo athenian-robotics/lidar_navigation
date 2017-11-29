@@ -115,8 +115,8 @@ class LidarRansac(object):
                     end0, end1 = w.end_points()
                     # plt.plot([w.p0.x, w.p1.x], [w.p0.y, w.p1.y], 'b-')
                     plt.plot([end0.x, end1.x], [w.yfit(end0.x), w.yfit(end1.x)], 'b-')
-
                     cnt += 1
+
                 if cnt != 3:
                     print("Found {} walls".format(cnt))
 
