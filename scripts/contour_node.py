@@ -19,6 +19,7 @@ from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, MAX_AXIS_MULT
+from constants import MAX_AXIS_MULT_DEFAULT, CONTOUR_TOPIC_DEFAULT
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import Contour
@@ -35,8 +36,8 @@ class LidarImage(object):
                  plot_centroid=False,
                  plot_points=False,
                  plot_slices=False,
-                 max_axis_mult=1.05,
-                 contour_topic="/contour"):
+                 max_axis_mult=MAX_AXIS_MULT_DEFAULT,
+                 contour_topic=CONTOUR_TOPIC_DEFAULT):
         self.__plot_all = plot_all
         self.__plot_points = plot_points
         self.__plot_contour = plot_contour

@@ -10,8 +10,8 @@ from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_S
 from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, MAX_AXIS_MULT, MAX_AXIS_MULT_DEFAULT
 from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_DIST_MULT, MAX_DIST_MULT_DEFAULT
-from constants import THRESHOLD, THRESHOLD_DEFAULT, SLICE_OFFSET_DEFAULT
-from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT
+from constants import THRESHOLD, THRESHOLD_DEFAULT, SLICE_OFFSET_DEFAULT, PAUSE_DEFAULT
+from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT, PUBLISH_PC_DEFAULT
 
 
 def setup_cli_args(*args):
@@ -103,8 +103,8 @@ def pc_topic(p):
 
 
 def publish_pc(p):
-    return p.add_argument("--publish_pc", dest=PUBLISH_PC, default=False, action="store_true",
-                          help="Publish point cloud data [false]")
+    return p.add_argument("--publish_pc", dest=PUBLISH_PC, default=PUBLISH_PC_DEFAULT, action="store_true",
+                          help="Publish point cloud data [{}]".format(PUBLISH_PC_DEFAULT))
 
 
 def plot_all(p):
@@ -162,5 +162,5 @@ def threshold_distance(p):
 
 
 def pause(p):
-    return p.add_argument("--pause", dest=PAUSE, default=0, type=int,
-                          help="Pause secs per scan [0]")
+    return p.add_argument("--pause", dest=PAUSE, default=PAUSE_DEFAULT, type=int,
+                          help="Pause secs per scan [{}]".format(PAUSE_DEFAULT))

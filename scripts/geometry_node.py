@@ -16,8 +16,9 @@ from shapely.geometry import Polygon
 
 import cli_args  as cli
 from cli_args import setup_cli_args
-from constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT
+from constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT, MAX_DIST_MULT_DEFAULT, PUBLISH_PC_DEFAULT
 from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC, SLICE_SIZE_DEFAULT
+from constants import SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC_DEFAULT, CENTROID_TOPIC_DEFAULT, PC_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE, PUBLISH_RATE_DEFAULT
 from point2d import Origin
 from point2d import Point2D
@@ -29,13 +30,13 @@ class LidarGeometry(object):
     def __init__(self,
                  slice_size=SLICE_SIZE_DEFAULT,
                  slice_offset=SLICE_OFFSET_DEFAULT,
-                 max_dist_mult=1.1,
+                 max_dist_mult=MAX_DIST_MULT_DEFAULT,
                  publish_rate=PUBLISH_RATE_DEFAULT,
-                 publish_pc=False,
-                 scan_topic="/scan",
-                 contour_topic="/contour",
-                 centroid_topic="/centroid",
-                 pc_topic="/pc2"):
+                 publish_pc=PUBLISH_PC_DEFAULT,
+                 scan_topic=SCAN_TOPIC_DEFAULT,
+                 contour_topic=CONTOUR_TOPIC_DEFAULT,
+                 centroid_topic=CENTROID_TOPIC_DEFAULT,
+                 pc_topic=PC_TOPIC_DEFAULT):
         self.__slice_size = slice_size
         self.__slice_offset = slice_offset
         self.__max_dist_mult = max_dist_mult

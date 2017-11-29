@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from threading import Lock
 from threading import Thread
 
-import random
 import rospy
 import time
 import cli_args  as cli
@@ -20,7 +19,8 @@ from constants import LOG_LEVEL
 from cli_args import setup_cli_args
 from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
 from constants import PLOT_ALL, PLOT_CENTROID, PLOT_POINTS, MAX_AXIS_MULT
-from constants import PAUSE, ITERATIONS, MIN_POINTS, THRESHOLD
+from constants import PAUSE, ITERATIONS, MIN_POINTS, THRESHOLD, ITERATIONS_DEFAULT, THRESHOLD_DEFAULT
+from constants import MIN_POINTS_DEFAULT, CONTOUR_TOPIC_DEFAULT, MAX_AXIS_MULT_DEFAULT, PAUSE_DEFAULT
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import Contour
@@ -31,15 +31,15 @@ from wall_finder import WallFinder
 class WallDetector(object):
     def __init__(self,
                  image_server=None,
-                 iterations=20,
-                 threshold=0.025,
-                 min_points=20,
-                 pause=0,
+                 iterations=ITERATIONS_DEFAULT,
+                 threshold=THRESHOLD_DEFAULT,
+                 min_points=MIN_POINTS_DEFAULT,
+                 pause=PAUSE_DEFAULT,
                  plot_all=False,
                  plot_centroid=False,
                  plot_points=False,
-                 max_axis_mult=1.05,
-                 contour_topic="/contour"):
+                 max_axis_mult=MAX_AXIS_MULT_DEFAULT,
+                 contour_topic=CONTOUR_TOPIC_DEFAULT):
         self.__iterations = iterations
         self.__threshold = threshold
         self.__min_points = min_points
@@ -57,8 +57,6 @@ class WallDetector(object):
 
         rospy.loginfo("Subscribing to Contour topic {}".format(contour_topic))
         self.__contour_sub = rospy.Subscriber(contour_topic, Contour, self.on_msg)
-
-        random.seed(0)
 
     def on_msg(self, contour_msg):
         with self.__curr_vals_lock:

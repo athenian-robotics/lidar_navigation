@@ -42,6 +42,7 @@ PLOT_POINTS = "plot_points"
 PLOT_SLICES = "plot_slices"
 
 PUBLISH_PC = "publish_pc"
+PUBLISH_PC_DEFAULT = False
 
 MAX_LINEAR = "max_linear"
 MAX_LINEAR_DEFAULT = .35
@@ -56,6 +57,7 @@ STOP_ANGLE = "stop_angle"
 STOP_ANGLE_DEFAULT = 70
 
 PAUSE = "pause"
+PAUSE_DEFAULT = 0
 ITERATIONS = "iterations"
 ITERATIONS_DEFAULT = 20
 MIN_POINTS = "min_points"

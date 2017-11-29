@@ -10,9 +10,10 @@ from geometry_msgs.msg import Twist
 
 import cli_args  as cli
 from cli_args import setup_cli_args
+from constants import CENTROID_TOPIC_DEFAULT, VEL_TOPIC_DEFAULT
 from constants import LOG_LEVEL
-from constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC
-from constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE
+from constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC, STOP_ANGLE_DEFAULT, PUBLISH_RATE_DEFAULT
+from constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE, MAX_LINEAR_DEFAULT, MAX_ANGULAR_DEFAULT
 from point2d import Point2D
 from utils import new_twist
 from utils import setup_logging
@@ -20,12 +21,12 @@ from utils import setup_logging
 
 class LidarTeleop(object):
     def __init__(self,
-                 max_linear=.35,
-                 max_angular=2.75,
-                 full_stop_angle=70,
-                 publish_rate=30,
-                 vel_topic="/cmd_vel",
-                 centroid_topic="/centroid"):
+                 max_linear=MAX_LINEAR_DEFAULT,
+                 max_angular=MAX_ANGULAR_DEFAULT,
+                 full_stop_angle=STOP_ANGLE_DEFAULT,
+                 publish_rate=PUBLISH_RATE_DEFAULT,
+                 vel_topic=VEL_TOPIC_DEFAULT,
+                 centroid_topic=CENTROID_TOPIC_DEFAULT):
         self.__max_linear = max_linear
         self.__max_angular = max_angular
         self.__full_stop_angle = full_stop_angle

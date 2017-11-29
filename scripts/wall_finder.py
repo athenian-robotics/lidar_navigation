@@ -3,6 +3,7 @@ import random
 import sys
 from scipy import stats
 
+random.seed(0)
 
 def random_pair(points):
     cnt = len(points)
