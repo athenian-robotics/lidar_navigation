@@ -96,10 +96,10 @@ class Wall(object):
 
     def slopeYInt(self):
         if self.__m is None:
-            self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.__points], [p.y for p in self.__points])
+            self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.__points], [p.y for p in self.__points])[0]
         return self.__m, self.__b
 
-    def fit(self, x):
+    def yfit(self, x):
         m, b = self.slopeYInt()
         return (m * x) + b
 
