@@ -104,6 +104,10 @@ class Wall(object):
         m, b = self.slopeYInt()
         return (m * x) + b
 
+    def xfit(self, y):
+        m, b = self.slopeYInt()
+        return (y - b) / m
+
     def end_points(self):
         if self.__closest is None or self.__farthest is None:
             for p in self.points:
