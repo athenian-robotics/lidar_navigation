@@ -97,8 +97,7 @@ class Wall(object):
     def slopeYInt(self):
         if self.__m is None:
             # self.__m, self.__b = curve_fit(straight_line, [p.x for p in self.points], [p.y for p in self.points])[0]
-            self.__m, self.__b, r_value, p_value, std_err = stats.linregress([p.x for p in self.points],
-                                                                             [p.y for p in self.points])
+            self.__m, self.__b = stats.linregress([p.x for p in self.points], [p.y for p in self.points])[0: 2]
         return self.__m, self.__b
 
     def yfit(self, x):
