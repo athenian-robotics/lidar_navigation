@@ -106,10 +106,10 @@ class Wall(object):
     def end_points(self):
         if self.__closest is None or self.__farthest is None:
             for p in self.__points:
-                if self.__closest is None or p.origin_dist < self.__closest:
+                if self.__closest is None or p.origin_dist < self.__closest.origin_dist:
                     self.__closest = p
 
-                if self.__farthest is None or p.origin_dist > self.__farthest:
+                if self.__farthest is None or p.origin_dist > self.__farthest.origin_dist:
                     self.__farthest = p
 
         return self.__closest, self.__farthest

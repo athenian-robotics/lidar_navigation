@@ -119,7 +119,7 @@ class ImageServer(object):
             return "Shutting down..."
 
         def get_page(delay):
-            delay_secs = float(delay) if delay else self.__http_delay_secs
+            delay_secs = int(delay) if delay else self.__http_delay_secs
             try:
                 with open(self.__template_file) as f:
                     html = f.read()
